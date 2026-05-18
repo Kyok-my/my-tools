@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Trade Note</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #fdf0f4;
+    --bg2:       #fce8ee;
+    --white:     #ffffff;
+    --pink1:     #e8a0b4;
+    --pink2:     #f2bfcc;
+    --pink3:     #f9dce4;
+    --pink4:     #fdeef2;
+    --pink5:     #fff5f8;
+    --rose:      #d4607a;
+    --lilac:     #e8d4f0;
+    --mint:      #d4f0e8;
+    --yellow:    #fef6d4;
+    --text:      #4a3540;
+    --text2:     #7a5a68;
+    --text3:     #b08898;
+    --border:    #f0c8d4;
+    --plus:      #2e8b57;
+    --minus:     #c04060;
+    --shadow:    rgba(200,120,150,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 15% 15%, rgba(242,191,204,0.35) 0%, transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(232,212,240,0.3) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 70%);
+  }
+
+  /* ヘッダー */
+  header {
+    background: linear-gradient(135deg, #f9dce4 0%, #fce8ee 50%, #e8d4f0 100%);
+    padding: 22px 24px 30px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid var(--pink3);
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    bottom: -18px; left: 0; right: 0;
+    height: 36px;
+    background: var(--bg);
+    border-radius: 50%;
+  }
+
+  .header-deco {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-right: 24px;
+    font-size: 28px;
+    opacity: 0.35;
+    letter-spacing: 8px;
+  }
+
+  .header-inner { position: relative; z-index: 1; }
+
+  header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--rose);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  header h1 span { font-size: 20px; margin-right: 6px; }
+
+  header .tagline {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 5px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  .main { padding: 22px 16px 50px; max-width: 860px; margin: 0 auto; }
+
+  /* タブ */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    background: var(--white);
+    padding: 6px;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px var(--shadow);
+    border: 1.5px solid var(--pink3);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px 6px;
+    border: none;
+    background: transparent;
+    color: var(--text3);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.22s cubic-bezier(.4,0,.2,1);
+    letter-spacing: 0.03em;
+  }
+
+  .tab:hover { background: var(--pink4); color: var(--text2); }
+
+  .tab.active {
+    background: linear-gradient(135deg, var(--pink2), var(--pink1));
+    color: white;
+    box-shadow: 0 3px 10px rgba(212,96,122,0.3);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeUp 0.25s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* カード */
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px 18px;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--pink3);
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--rose);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding-bottom: 10px;
+    border-bottom: 2px dotted var(--pink3);
+    letter-spacing: 0.04em;
+  }
+
+  .card-title .icon {
+    width: 28px; height: 28px;
+    background: var(--pink3);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* サマリーグリッド */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .summary-item {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 14px 15px;
+    border: 1.5px solid var(--pink3);
+    box-shadow: 0 3px 14px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summary-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--pink2), var(--lilac));
+    border-radius: 18px 18px 0 0;
+  }
+
+  .summary-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    margin-bottom: 5px;
+    margin-top: 2px;
+  }
+
+  .summary-value {
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .summary-value.plus { color: var(--plus); }
+  .summary-value.minus { color: var(--minus); }
+
+  /* 目標バー */
+  .goal-bar-bg {
+    background: var(--pink4);
+    border-radius: 99px;
+    height: 8px;
+    margin-top: 8px;
+    overflow: hidden;
+    border: 1px solid var(--pink3);
+  }
+
+  .goal-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--pink2), var(--pink1));
+    transition: width 0.8s cubic-bezier(.4,2,.6,1);
+  }
+
+  .goal-bar-fill.over {
+    background: linear-gradient(90deg, #f0c040, #e8a020);
+  }
+
+  .goal-pct {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    text-align: right;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  /* フォーム */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    letter-spacing: 0.05em;
+  }
+
+  input, select {
+    padding: 10px 14px;
+    border: 1.5px solid var(--pink3);
+    border-radius: 12px;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 14px;
+    background: var(--pink5);
+    color: var(--text);
+    outline: none;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  input:focus, select:focus {
+    border-color: var(--pink1);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(232,160,180,0.15);
+  }
+
+  input::placeholder { color: var(--text3); font-weight: 400; }
+
+  .btn-add {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--pink1), var(--rose));
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 8px;
+    letter-spacing: 0.08em;
+    box-shadow: 0 4px 14px rgba(212,96,122,0.35);
+    transition: all 0.2s;
+  }
+
+  .btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(212,96,122,0.4);
+  }
+
+  .btn-add:active { transform: translateY(0); }
+
+  /* テーブル */
+  .table-wrap { overflow-x: auto; }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0 6px; font-size: 13px; }
+
+  thead th {
+    background: var(--pink3);
+    color: var(--rose);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 9px 8px;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+
+  thead th:first-child { border-radius: 10px 0 0 10px; }
+  thead th:last-child  { border-radius: 0 10px 10px 0; }
+
+  tbody tr {
+    background: var(--white);
+    transition: all 0.15s;
+  }
+
+  tbody tr:hover {
+    background: var(--pink5);
+    transform: translateX(3px);
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+
+  tbody td {
+    padding: 10px 8px;
+    text-align: center;
+    border-top: 1px solid var(--pink4);
+    border-bottom: 1px solid var(--pink4);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  tbody td:first-child { border-left: 1px solid var(--pink4); border-radius: 12px 0 0 12px; }
+  tbody td:last-child  { border-right: 1px solid var(--pink4); border-radius: 0 12px 12px 0; }
+
+  .profit-plus { color: var(--plus); font-weight: 800; }
+  .profit-minus { color: var(--minus); font-weight: 800; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-nisa { background: var(--mint); color: #2a7a5a; }
+  .badge-toku { background: var(--yellow); color: #8a6020; }
+
+  .carry-badge {
+    display: inline-block;
+    background: var(--lilac);
+    color: #7050a0;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 99px;
+    letter-spacing: 0.04em;
+  }
+
+  .btn-del {
+    background: none;
+    border: 1.5px solid var(--pink3);
+    border-radius: 8px;
+    color: var(--text3);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 3px 9px;
+    transition: all 0.15s;
+  }
+
+  .btn-del:hover {
+    border-color: var(--minus);
+    color: var(--minus);
+    background: #fff0f2;
+  }
+
+  /* 月次推移 */
+  .month-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 4px;
+    border-bottom: 1.5px dotted var(--pink3);
+    font-size: 14px;
+  }
+
+  .month-row:last-child { border-bottom: none; }
+  .month-label { color: var(--text2); font-weight: 700; font-size: 13px; }
+
+  /* 設定 */
+  .setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1.5px dotted var(--pink3);
+    gap: 12px;
+  }
+
+  .setting-row:last-child { border-bottom: none; }
+  .setting-label { font-size: 14px; font-weight: 700; color: var(--text2); white-space: nowrap; }
+  .setting-input { width: 150px; }
+
+  .empty {
+    text-align: center;
+    color: var(--text3);
+    padding: 32px 10px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 2;
+  }
+
+  .hint {
+    background: var(--yellow);
+    border: 1.5px solid #f0d880;
+    border-radius: 14px;
+    padding: 10px 15px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #8a6810;
+    margin-bottom: 14px;
+    letter-spacing: 0.03em;
+  }
+
+  /* チップ装飾 */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--pink3);
+    color: var(--rose);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 99px;
+    letter-spacing: 0.05em;
+    margin-left: 6px;
+  }
+
+  /* ゲージグラフ */
+  .gauge-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .gauge-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 16px 12px 12px;
+    border: 1.5px solid var(--pink3);
+    box-shadow: 0 4px 20px var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gauge-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .gauge-card.first::before  { background: linear-gradient(90deg, var(--pink2), var(--pink1)); }
+  .gauge-card.second::before { background: linear-gradient(90deg, #c8b0e8, #a080d0); }
+  .gauge-card.over::before   { background: linear-gradient(90deg, #f0c040, #e8902a); }
+
+  .gauge-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text2);
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .gauge-svg-wrap {
+    position: relative;
+    width: 120px;
+    height: 66px;
+    margin: 0 auto 6px;
+  }
+
+  .gauge-svg-wrap svg { width: 120px; height: 66px; overflow: visible; }
+
+  .gauge-center {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    text-align: center;
+  }
+
+  .gauge-pct {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .gauge-pct.pink  { color: var(--pink1); }
+  .gauge-pct.purple { color: #a080d0; }
+  .gauge-pct.gold  { color: #d4900a; }
+
+  .gauge-amount {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .gauge-goal {
+    font-size: 10px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  /* 生涯目標カード */
+  .dream-card {
+    background: linear-gradient(135deg, #fff0f6 0%, #f8f0ff 100%);
+    border-radius: 20px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--pink3);
+    box-shadow: 0 4px 20px var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dream-card::before {
+    content: '🌟';
+    position: absolute;
+    top: 10px; right: 14px;
+    font-size: 28px;
+    opacity: 0.18;
+  }
+
+  .dream-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--rose);
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .dream-amount {
+    font-size: 28px;
+    font-weight: 800;
+    color: #a060c8;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+
+  .dream-progress {
+    font-size: 12px;
+    color: var(--text3);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .dream-bar-bg {
+    background: #f0e8f8;
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    border: 1px solid #dcc8f0;
+    margin: 0 10px;
+  }
+
+  .dream-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #c8a0e8, #a060c8);
+    transition: width 0.8s cubic-bezier(.4,2,.6,1);
+  }
+
+  .dream-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* フリーメモ欄 */
+  .memo-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--pink3);
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+
+  .memo-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--pink3);
+    border-radius: 14px;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--pink5);
+    resize: vertical;
+    outline: none;
+    line-height: 1.7;
+    transition: border-color 0.2s;
+  }
+
+  .memo-textarea:focus {
+    border-color: var(--pink1);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(232,160,180,0.15);
+  }
+
+  .memo-textarea::placeholder {
+    color: var(--text3);
+    font-weight: 400;
+  }
+
+  .memo-save-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+
+  .btn-memo-save {
+    padding: 8px 20px;
+    background: linear-gradient(135deg, var(--pink2), var(--pink1));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(212,96,122,0.3);
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-memo-save:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(212,96,122,0.35); }
+  .btn-memo-save:active { transform: translateY(0); }
+
+  .memo-saved-at {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 6px;
+    text-align: right;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-deco">🌸💕✿🌷💗</div>
+  <div class="header-inner">
+    <h1><span>🌸</span>My Trade Note</h1>
+    <div class="tagline">毎日の売買を、かわいく記録しよう ♡</div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('dashboard')">📊 ホーム</button>
+    <button class="tab" onclick="switchTab('input')">✏️ 入力</button>
+    <button class="tab" onclick="switchTab('list')">📋 一覧</button>
+    <button class="tab" onclick="switchTab('settings')">⚙️ 設定</button>
+  </div>
+
+  <!-- ダッシュボード -->
+  <div class="tab-content active" id="tab-dashboard">
+
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-label">💰 現在の資産</div>
+        <div class="summary-value" id="s-asset">¥ —</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">🌱 元手からの増減</div>
+        <div class="summary-value" id="s-growth">—</div>
+      </div>
+    </div>
+
+    <!-- ゲージグラフ：前半・後半 or 週 -->
+    <div class="gauge-wrap" id="gauge-wrap">
+      <div class="gauge-card first" id="gauge-card-1">
+        <div class="gauge-title" id="gauge-title-1">前半</div>
+        <div class="gauge-svg-wrap">
+          <svg viewBox="0 0 120 66">
+            <!-- 背景トラック -->
+            <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="#fdeef2" stroke-width="12" stroke-linecap="round"/>
+            <!-- 達成バー -->
+            <path id="gauge-path-1" d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="#f2bfcc" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="0 157"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-pct pink" id="gauge-pct-1">—</div>
+          </div>
+        </div>
+        <div class="gauge-amount" id="gauge-amount-1">—</div>
+        <div class="gauge-goal" id="gauge-goal-1"></div>
+      </div>
+
+      <div class="gauge-card second" id="gauge-card-2">
+        <div class="gauge-title" id="gauge-title-2">後半</div>
+        <div class="gauge-svg-wrap">
+          <svg viewBox="0 0 120 66">
+            <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="#f0e8f8" stroke-width="12" stroke-linecap="round"/>
+            <path id="gauge-path-2" d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="#c8b0e8" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="0 157"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-pct purple" id="gauge-pct-2">—</div>
+          </div>
+        </div>
+        <div class="gauge-amount" id="gauge-amount-2">—</div>
+        <div class="gauge-goal" id="gauge-goal-2"></div>
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-label">🗓 今月の利益（税後）</div>
+        <div class="summary-value" id="s-month">—</div>
+        <div class="goal-bar-bg"><div class="goal-bar-fill" id="bar-month" style="width:0%"></div></div>
+        <div class="goal-pct" id="pct-month"></div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">📅 年間利益（税後）</div>
+        <div class="summary-value" id="s-year">—</div>
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-label">🔄 持ち越し中</div>
+        <div class="summary-value" id="s-carry">— 件</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">💹 今月勝率</div>
+        <div class="summary-value" id="s-winrate">— %</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">📆</div>月次推移</div>
+      <div id="monthly-list"><div class="empty">まだデータがありません🌸<br>入力タブから記録してみよう！</div></div>
+    </div>
+
+    <!-- 生涯目標カード -->
+    <div class="dream-card" id="dream-card-wrap">
+      <div class="dream-title">🌟 生涯で目指す目標金額</div>
+      <div class="dream-amount" id="dream-amount">設定してね ✨</div>
+      <div class="dream-progress" id="dream-progress"></div>
+      <div class="dream-bar-bg"><div class="dream-bar-fill" id="dream-bar" style="width:0%"></div></div>
+      <div class="dream-sub" id="dream-sub"></div>
+    </div>
+
+    <!-- フリーメモ -->
+    <div class="memo-card">
+      <div class="card-title"><div class="icon">📝</div>マイメモ</div>
+      <textarea class="memo-textarea" id="free-memo" placeholder="目標・気づき・トレードの振り返り…なんでも自由に書いてね🌸"></textarea>
+      <div class="memo-save-row">
+        <button class="btn-memo-save" onclick="saveMemo()">保存する</button>
+      </div>
+      <div class="memo-saved-at" id="memo-saved-at"></div>
+    </div>
+
+  </div>
+
+  <!-- 入力 -->
+  <div class="tab-content" id="tab-input">
+    <div class="hint">💡 売値を空欄にすると「持ち越し」として記録されます</div>
+    <div class="card">
+      <div class="card-title"><div class="icon">✏️</div>取引を追加する</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>📅 日付</label>
+          <input type="date" id="date">
+        </div>
+        <div class="form-group">
+          <label>🏦 口座</label>
+          <select id="account">
+            <option value="NISA">🌿 NISA（非課税）</option>
+            <option value="特定">📄 特定（課税20%）</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>📌 銘柄名</label>
+          <input type="text" id="stock" placeholder="例：三井金属">
+        </div>
+        <div class="form-group">
+          <label>💴 買値（円）</label>
+          <input type="number" id="buy" placeholder="1000">
+        </div>
+        <div class="form-group">
+          <label>💵 売値（円）※持越は空欄</label>
+          <input type="number" id="sell" placeholder="1100">
+        </div>
+        <div class="form-group full">
+          <label>📦 株数</label>
+          <input type="number" id="qty" placeholder="100">
+        </div>
+        <div class="form-group full">
+          <label>📝 メモ（任意）</label>
+          <input type="text" id="memo" placeholder="例：損切り・ニュース後エントリーなど">
+        </div>
+      </div>
+      <button class="btn-add" onclick="addTrade()">＋ 追加する</button>
+    </div>
+  </div>
+
+  <!-- 一覧 -->
+  <div class="tab-content" id="tab-list">
+    <div class="card">
+      <div class="card-title"><div class="icon">📋</div>取引一覧</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>日付</th>
+              <th>銘柄</th>
+              <th>口座</th>
+              <th>買値</th>
+              <th>売値</th>
+              <th>利益（税前）</th>
+              <th>利益（税後）</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="list"></tbody>
+        </table>
+        <div id="list-empty" class="empty">まだデータがありません🌸<br>入力タブから記録してみよう！</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 設定 -->
+  <div class="tab-content" id="tab-settings">
+    <div class="card">
+      <div class="card-title"><div class="icon">🎯</div>目標・資産の設定</div>
+      <div class="setting-row">
+        <span class="setting-label">💰 元手（初期資金）</span>
+        <input type="number" class="setting-input" id="cfg-seed" placeholder="900000">
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">🌟 生涯目標金額（円）</span>
+        <input type="number" class="setting-input" id="cfg-dream" placeholder="100000000">
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">🗓 月の目標利益（円）</span>
+        <input type="number" class="setting-input" id="cfg-month" placeholder="80000">
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">📆 短期目標利益（円）</span>
+        <input type="number" class="setting-input" id="cfg-week" placeholder="20000">
+      </div>
+      <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:10px;padding-top:14px">
+        <span class="setting-label">📆 短期集計の区切り方</span>
+        <select id="cfg-period-mode" class="setting-input" style="width:100%" onchange="togglePeriodSettings()">
+          <option value="week">月〜金（平日）</option>
+          <option value="custom">日付で区切る（例：15日区切り）</option>
+        </select>
+      </div>
+      <div id="custom-period-settings" style="display:none;padding-top:4px">
+        <div class="setting-row">
+          <span class="setting-label">区切り日（何日から後半？）</span>
+          <input type="number" class="setting-input" id="cfg-period-start" placeholder="16" min="1" max="28">
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">後半の呼び方</span>
+          <input type="text" class="setting-input" id="cfg-period-name" placeholder="後半">
+        </div>
+        <div class="hint" style="margin-top:6px;font-size:12px">
+          💡 例：16と入力 → 1〜15日＝前半、16日〜月末＝後半
+        </div>
+      </div>
+      <button class="btn-add" onclick="saveSettings()" style="margin-top:16px">💾 保存する</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon">🗑</div>データ管理</div>
+      <div class="setting-row">
+        <span class="setting-label">すべてのデータを削除する</span>
+        <button class="btn-del" style="padding:7px 16px;font-size:12px" onclick="clearAll()">全削除</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let trades = [];
+let cfg = { seed: 900000, week: 0, month: 0, periodMode: 'week', periodStart: 1, periodName: '前半', dream: 0 };
+
+// ── データ読み込み ──────────────────────
+function load() {
+  try { trades = JSON.parse(localStorage.getItem('trades_v2')) || []; } catch(e){ trades=[]; }
+  try {
+    const saved = JSON.parse(localStorage.getItem('cfg_v2'));
+    if (saved) cfg = Object.assign(cfg, saved);
+  } catch(e){}
+  document.getElementById('cfg-seed').value         = cfg.seed        || '';
+  document.getElementById('cfg-week').value         = cfg.week        || '';
+  document.getElementById('cfg-month').value        = cfg.month       || '';
+  document.getElementById('cfg-period-mode').value  = cfg.periodMode  || 'week';
+  document.getElementById('cfg-period-start').value = cfg.periodStart || 1;
+  document.getElementById('cfg-period-name').value  = cfg.periodName  || '前半';
+  document.getElementById('cfg-dream').value        = cfg.dream       || '';
+  // メモ読み込み
+  const savedMemo = localStorage.getItem('free_memo') || '';
+  const savedAt   = localStorage.getItem('free_memo_at') || '';
+  document.getElementById('free-memo').value = savedMemo;
+  if (savedAt) document.getElementById('memo-saved-at').textContent = '最終保存：' + savedAt;
+  togglePeriodSettings();
+}
+
+function saveTrades() { localStorage.setItem('trades_v2', JSON.stringify(trades)); }
+
+function saveSettings() {
+  cfg.seed        = parseFloat(document.getElementById('cfg-seed').value)         || 900000;
+  cfg.week        = parseFloat(document.getElementById('cfg-week').value)         || 0;
+  cfg.month       = parseFloat(document.getElementById('cfg-month').value)        || 0;
+  cfg.periodMode  = document.getElementById('cfg-period-mode').value;
+  cfg.periodStart = parseInt(document.getElementById('cfg-period-start').value)   || 1;
+  cfg.periodName  = document.getElementById('cfg-period-name').value.trim()       || '前半';
+  cfg.dream       = parseFloat(document.getElementById('cfg-dream').value)         || 0;
+  localStorage.setItem('cfg_v2', JSON.stringify(cfg));
+  renderDashboard();
+  alert('設定を保存しました 🌸');
+}
+
+// 期間モード切替で追加設定を表示/非表示
+function togglePeriodSettings() {
+  const mode = document.getElementById('cfg-period-mode').value;
+  document.getElementById('custom-period-settings').style.display = mode === 'custom' ? 'block' : 'none';
+}
+
+// ── 期間範囲を取得 ──────────────────────
+function getPeriodRange() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm   = now.getMonth();
+  const dd   = now.getDate();
+
+  if (cfg.periodMode === 'week') {
+    // 月〜金（平日）
+    const day = now.getDay(); // 0=日,1=月...5=金,6=土
+    // 今週の月曜を求める（日曜は前週の月曜から6日後を今週とする）
+    const mon = new Date(now);
+    if (day === 0) {
+      mon.setDate(dd - 6); // 日曜→前週月曜
+    } else {
+      mon.setDate(dd - (day - 1));
+    }
+    const fri = new Date(mon);
+    fri.setDate(mon.getDate() + 4); // 月+4=金
+    return [mon.toISOString().slice(0,10), fri.toISOString().slice(0,10), '今週（月〜金）'];
+  } else {
+    // カスタム：periodStart日を区切りに前半/後半
+    const start = cfg.periodStart || 1;
+    let pStart, pEnd, pName;
+    if (dd >= start) {
+      pStart = new Date(yyyy, mm, start);
+      pEnd   = new Date(yyyy, mm + 1, 0);
+      pName  = cfg.periodName || '後半';
+    } else {
+      pStart = new Date(yyyy, mm - 1, start);
+      pEnd   = new Date(yyyy, mm, start - 1);
+      pName  = '前半';
+    }
+    return [
+      pStart.toISOString().slice(0,10),
+      pEnd.toISOString().slice(0,10),
+      pName
+    ];
+  }
+}
+
+// ── 取引追加 ──────────────────────────
+function addTrade() {
+  const dateVal  = document.getElementById('date').value;
+  const stockVal = document.getElementById('stock').value.trim();
+  const buyVal   = parseFloat(document.getElementById('buy').value);
+  const sellRaw  = document.getElementById('sell').value;
+  const qtyVal   = parseFloat(document.getElementById('qty').value);
+  const accVal   = document.getElementById('account').value;
+  const memoVal  = document.getElementById('memo').value.trim();
+
+  if (!dateVal || !stockVal || isNaN(buyVal) || isNaN(qtyVal)) {
+    alert('日付・銘柄・買値・株数は必須項目です');
+    return;
+  }
+
+  // IDは連番で管理（削除バグ防止）
+  const newId = trades.length > 0 ? Math.max(...trades.map(t => t.id)) + 1 : 1;
+
+  trades.push({
+    id: newId,
+    date: dateVal,
+    stock: stockVal,
+    buy: buyVal,
+    sell: sellRaw === '' ? null : parseFloat(sellRaw),
+    qty: qtyVal,
+    account: accVal,
+    memo: memoVal
+  });
+
+  saveTrades();
+  renderAll();
+  ['stock','buy','sell','qty','memo'].forEach(id => document.getElementById(id).value = '');
+  switchTab('list');
+}
+
+// ── 削除（data属性経由で安全に取得）──
+function deleteTrade(id) {
+  if (!confirm('このデータを削除しますか？')) return;
+  const numId = Number(id);
+  trades = trades.filter(t => t.id !== numId);
+  saveTrades();
+  renderAll();
+}
+
+function clearAll() {
+  if (!confirm('すべてのデータを削除します。この操作は元に戻せません。')) return;
+  trades = [];
+  saveTrades();
+  renderAll();
+}
+
+// ── 計算 ──────────────────────────────
+function calcProfit(t) {
+  if (t.sell === null || t.sell === undefined) return null;
+  return (t.sell - t.buy) * t.qty;
+}
+
+function calcAfter(t) {
+  const p = calcProfit(t);
+  if (p === null) return null;
+  return t.account === '特定' ? Math.floor(p * 0.8) : p;
+}
+
+function fmtNum(n) {
+  if (n === null || n === undefined) return '—';
+  return (n >= 0 ? '+' : '') + n.toLocaleString() + '円';
+}
+
+// ── レンダリング ──────────────────────
+function renderAll() { renderList(); renderDashboard(); }
+
+function renderList() {
+  const sorted = [...trades].sort((a,b) => new Date(a.date)-new Date(b.date));
+  const tbody  = document.getElementById('list');
+  const empty  = document.getElementById('list-empty');
+
+  if (sorted.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = sorted.map(t => {
+    const profit = calcProfit(t);
+    const after  = calcAfter(t);
+    const pClass = profit === null ? '' : profit >= 0 ? 'profit-plus' : 'profit-minus';
+    const profitTxt = profit === null
+      ? '<span class="carry-badge">持越中</span>'
+      : `<span class="${pClass}">${fmtNum(profit)}</span>`;
+    const afterTxt = after === null ? '—' : `<span class="${pClass}">${fmtNum(after)}</span>`;
+    const badge = t.account === 'NISA'
+      ? '<span class="badge badge-nisa">NISA</span>'
+      : '<span class="badge badge-toku">特定</span>';
+
+    // data属性でIDを渡す（削除バグ修正）
+    return `<tr>
+      <td style="font-size:12px;color:var(--text2)">${t.date}</td>
+      <td style="text-align:left;font-weight:700">${t.stock}${t.memo ? `<br><span style="font-size:11px;color:var(--text3);font-weight:400">${t.memo}</span>` : ''}</td>
+      <td>${badge}</td>
+      <td style="color:var(--text2)">${t.buy.toLocaleString()}</td>
+      <td style="color:var(--text2)">${t.sell !== null ? t.sell.toLocaleString() : '—'}</td>
+      <td>${profitTxt}</td>
+      <td>${afterTxt}</td>
+      <td><button class="btn-del" data-id="${t.id}" onclick="deleteTrade(this.dataset.id)">削除</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── ゲージ描画 ──────────────────────────
+function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, val, goal, title, colorClass) {
+  const TOTAL = 157; // 半円の弧長
+  document.getElementById(titleId).textContent = title;
+
+  const pctEl = document.getElementById(pctId);
+  const amEl  = document.getElementById(amountId);
+  const goalEl = document.getElementById(goalId);
+  const path  = document.getElementById(pathId);
+  const card  = document.getElementById(cardId);
+
+  if (goal <= 0) {
+    // 目標未設定
+    path.setAttribute('stroke-dasharray', '0 ' + TOTAL);
+    pctEl.textContent = '—';
+    pctEl.className = 'gauge-pct ' + colorClass;
+    amEl.textContent = val !== 0 ? fmtNum(val) : '—';
+    goalEl.textContent = '目標を設定してね';
+    card.classList.remove('over');
+    return;
+  }
+
+  const rawPct = Math.round(val / goal * 100);
+  const clampedPct = Math.min(Math.max(rawPct, 0), 100);
+  const dashLen = TOTAL * clampedPct / 100;
+  const isOver = rawPct >= 100;
+
+  path.setAttribute('stroke-dasharray', dashLen + ' ' + TOTAL);
+
+  if (isOver) {
+    path.setAttribute('stroke', '#e8a020');
+    card.classList.add('over');
+    pctEl.className = 'gauge-pct gold';
+  } else {
+    card.classList.remove('over');
+    pctEl.className = 'gauge-pct ' + colorClass;
+    if (colorClass === 'pink')   path.setAttribute('stroke', '#f2bfcc');
+    if (colorClass === 'purple') path.setAttribute('stroke', '#c8b0e8');
+  }
+
+  pctEl.textContent = rawPct + '%';
+  amEl.textContent  = fmtNum(val);
+  goalEl.textContent = '目標 ' + goal.toLocaleString() + '円';
+}
+
+function renderDashboard() {
+  const now = new Date();
+  const thisMonth = now.toISOString().slice(0,7);
+  const thisYear  = now.toISOString().slice(0,4);
+
+  // 前半・後半の期間を計算
+  const mm   = now.getMonth();
+  const yyyy = now.getFullYear();
+  const dd   = now.getDate();
+  const start = cfg.periodStart || 16;
+
+  let firstStart, firstEnd, secondStart, secondEnd, firstName, secondName;
+
+  if (cfg.periodMode === 'week') {
+    // 月〜金モード：今週と先週を前半・後半として表示
+    const day = now.getDay();
+    const thisMon = new Date(now);
+    thisMon.setDate(dd - (day === 0 ? 6 : day - 1));
+    const thisFri = new Date(thisMon); thisFri.setDate(thisMon.getDate() + 4);
+    const lastMon = new Date(thisMon); lastMon.setDate(thisMon.getDate() - 7);
+    const lastFri = new Date(lastMon); lastFri.setDate(lastMon.getDate() + 4);
+    firstStart  = lastMon.toISOString().slice(0,10);
+    firstEnd    = lastFri.toISOString().slice(0,10);
+    secondStart = thisMon.toISOString().slice(0,10);
+    secondEnd   = thisFri.toISOString().slice(0,10);
+    firstName   = '先週（月〜金）';
+    secondName  = '今週（月〜金）';
+  } else {
+    // カスタム日付区切り
+    if (dd >= start) {
+      // 今は後半 → 前半：今月1日〜start-1日、後半：今月start日〜月末
+      firstStart  = new Date(yyyy, mm, 1).toISOString().slice(0,10);
+      firstEnd    = new Date(yyyy, mm, start - 1).toISOString().slice(0,10);
+      secondStart = new Date(yyyy, mm, start).toISOString().slice(0,10);
+      secondEnd   = new Date(yyyy, mm + 1, 0).toISOString().slice(0,10);
+    } else {
+      // 今は前半 → 先月の後半・今月の前半
+      firstStart  = new Date(yyyy, mm - 1, start).toISOString().slice(0,10);
+      firstEnd    = new Date(yyyy, mm, 0).toISOString().slice(0,10);
+      secondStart = new Date(yyyy, mm, 1).toISOString().slice(0,10);
+      secondEnd   = new Date(yyyy, mm, start - 1).toISOString().slice(0,10);
+    }
+    firstName  = '前半（1〜' + (start-1) + '日）';
+    secondName = (cfg.periodName || '後半') + '（' + start + '日〜月末）';
+  }
+
+  let firstSum=0, secondSum=0, monthSum=0, yearSum=0, totalAfter=0, carryCount=0;
+  let monthWin=0, monthTotal=0;
+
+  trades.forEach(t => {
+    const after = calcAfter(t);
+    if (after === null) { carryCount++; return; }
+    totalAfter += after;
+    if (t.date >= firstStart  && t.date <= firstEnd)   firstSum  += after;
+    if (t.date >= secondStart && t.date <= secondEnd)  secondSum += after;
+    if (t.date.slice(0,7) === thisMonth) {
+      monthSum += after;
+      monthTotal++;
+      if (after > 0) monthWin++;
+    }
+    if (t.date.slice(0,4) === thisYear) yearSum += after;
+  });
+
+  // 資産・増減
+  const asset = cfg.seed + totalAfter;
+  document.getElementById('s-asset').textContent = '¥' + asset.toLocaleString();
+  const gEl = document.getElementById('s-growth');
+  gEl.textContent = fmtNum(totalAfter) + (cfg.seed ? '（' + (totalAfter/cfg.seed*100).toFixed(1) + '%）' : '');
+  gEl.className = 'summary-value ' + (totalAfter >= 0 ? 'plus' : 'minus');
+
+  // ゲージ描画
+  drawGauge('gauge-path-1','gauge-card-1','gauge-pct-1','gauge-amount-1','gauge-goal-1','gauge-title-1',
+    firstSum, cfg.week, firstName, 'pink');
+  drawGauge('gauge-path-2','gauge-card-2','gauge-pct-2','gauge-amount-2','gauge-goal-2','gauge-title-2',
+    secondSum, cfg.week, secondName, 'purple');
+
+  // 今月
+  const mEl = document.getElementById('s-month');
+  mEl.textContent = fmtNum(monthSum);
+  mEl.className = 'summary-value ' + (monthSum >= 0 ? 'plus' : 'minus');
+  if (cfg.month > 0) {
+    const pct = Math.round(monthSum / cfg.month * 100);
+    const bar = document.getElementById('bar-month');
+    bar.style.width = Math.min(Math.max(pct,0),100) + '%';
+    bar.className = 'goal-bar-fill' + (pct >= 100 ? ' over' : '');
+    document.getElementById('pct-month').textContent = '目標達成率 ' + pct + '%';
+  }
+
+  // 年間
+  const yEl = document.getElementById('s-year');
+  yEl.textContent = fmtNum(yearSum);
+  yEl.className = 'summary-value ' + (yearSum >= 0 ? 'plus' : 'minus');
+
+  // 持越・勝率
+  document.getElementById('s-carry').textContent = carryCount + ' 件';
+  document.getElementById('s-winrate').textContent =
+    monthTotal > 0 ? Math.round(monthWin/monthTotal*100) + '%' : '—';
+
+  // 月次推移
+  const monthly = {};
+  trades.forEach(t => {
+    const after = calcAfter(t);
+    if (after === null) return;
+    const m = t.date.slice(0,7);
+    monthly[m] = (monthly[m] || 0) + after;
+  });
+  const months = Object.keys(monthly).sort().reverse();
+  document.getElementById('monthly-list').innerHTML = months.length === 0
+    ? '<div class="empty">まだデータがありません🌸<br>入力タブから記録してみよう！</div>'
+    : months.map(m => {
+        const v = monthly[m];
+        return `<div class="month-row">
+          <span class="month-label">🗓 ${m}</span>
+          <span class="${v >= 0 ? 'profit-plus' : 'profit-minus'}" style="font-size:15px;font-weight:800">${fmtNum(v)}</span>
+        </div>`;
+      }).join('');
+
+  // 生涯目標
+  const dream = cfg.dream || 0;
+  const dreamEl = document.getElementById('dream-amount');
+  const dreamBar = document.getElementById('dream-bar');
+  const dreamProg = document.getElementById('dream-progress');
+  const dreamSub  = document.getElementById('dream-sub');
+
+  if (dream > 0) {
+    const pct = Math.min((totalAfter / dream * 100), 100);
+    const remaining = dream - totalAfter;
+    dreamEl.textContent = '¥' + dream.toLocaleString();
+    dreamBar.style.width = Math.max(pct, 0) + '%';
+    dreamProg.textContent = '達成率 ' + (totalAfter / dream * 100).toFixed(2) + '%';
+    dreamSub.textContent = remaining > 0
+      ? 'あと ¥' + remaining.toLocaleString() + ' で達成！🌸'
+      : '🎉 目標達成おめでとう！！';
+  } else {
+    dreamEl.textContent = '設定してね ✨';
+    dreamBar.style.width = '0%';
+    dreamProg.textContent = '';
+    dreamSub.textContent = '設定タブから生涯目標を入力できます';
+  }
+}
+
+// ── メモ保存 ──────────────────────────
+function saveMemo() {
+  const text = document.getElementById('free-memo').value;
+  const now  = new Date();
+  const at   = now.getFullYear() + '/' +
+               String(now.getMonth()+1).padStart(2,'0') + '/' +
+               String(now.getDate()).padStart(2,'0') + ' ' +
+               String(now.getHours()).padStart(2,'0') + ':' +
+               String(now.getMinutes()).padStart(2,'0');
+  localStorage.setItem('free_memo', text);
+  localStorage.setItem('free_memo_at', at);
+  document.getElementById('memo-saved-at').textContent = '最終保存：' + at;
+}
+
+function switchTab(name) {
+  const names = ['dashboard','input','list','settings'];
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', names[i] === name));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + name));
+}
+
+load();
+document.getElementById('date').value = new Date().toISOString().slice(0,10);
+renderAll();
+</script>
+</body>
+</html>
