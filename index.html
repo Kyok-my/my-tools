@@ -1,10 +1,242 @@
-<index>
-<html></html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=trade-tracker.html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #fffdf0;
+    --cream:   #fdf6e3;
+    --yellow1: #fef3c7;
+    --yellow2: #fde68a;
+    --yellow3: #f9d94e;
+    --warm:    #f5e6c8;
+    --text:    #5c4a1e;
+    --text2:   #8a7040;
+    --text3:   #b8976a;
+    --border:  #f0dfa0;
+    --shadow:  rgba(180,150,60,0.1);
+    --white:   #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(254,243,199,0.8) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(253,230,138,0.4) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.5) 0%, transparent 60%);
+  }
+
+  header {
+    text-align: center;
+    padding: 52px 24px 40px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--yellow2), var(--yellow3));
+    border-radius: 99px;
+    margin: 18px auto 0;
+  }
+
+  .deco {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-6px); }
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+  }
+
+  h1 span {
+    color: var(--text2);
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-top: 6px;
+    letter-spacing: 0.12em;
+  }
+
+  .main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 10px 20px 60px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 14px;
+    padding-left: 4px;
+  }
+
+  .tools {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+
+  .tool-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 20px 22px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: all 0.25s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--yellow2), var(--yellow3));
+    border-radius: 20px 20px 0 0;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .tool-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(180,150,60,0.18);
+    border-color: var(--yellow2);
+  }
+
+  .tool-card:hover::before {
+    opacity: 1;
+  }
+
+  .tool-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--yellow1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    border: 1.5px solid var(--border);
+  }
+
+  .tool-info { flex: 1; }
+
+  .tool-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .tool-desc {
+    font-size: 12px;
+    color: var(--text3);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .tool-arrow {
+    font-size: 18px;
+    color: var(--text3);
+    transition: transform 0.2s;
+  }
+
+  .tool-card:hover .tool-arrow {
+    transform: translateX(4px);
+  }
+
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text3);
+    padding-bottom: 30px;
+    letter-spacing: 0.08em;
+  }
+
+  /* スマホ対応 */
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .tool-card { padding: 16px 18px; }
+    .tool-icon { width: 46px; height: 46px; font-size: 20px; }
+    .tool-name { font-size: 15px; }
+  }
+</style>
 </head>
 <body>
+
+<header>
+  <span class="deco">🌼</span>
+  <h1>My Tools<span>いつでも使えるツール集</span></h1>
+</header>
+
+<main class="main">
+  <p class="section-label">✦ TOOLS</p>
+  <div class="tools">
+
+    <a class="tool-card" href="trade-tracker.html">
+      <div class="tool-icon">📊</div>
+      <div class="tool-info">
+        <div class="tool-name">トレードトラッカー</div>
+        <div class="tool-desc">株のトレード記録・損益管理</div>
+      </div>
+      <span class="tool-arrow">›</span>
+    </a>
+
+    <a class="tool-card" href="schedule-alarm.html">
+      <div class="tool-icon">🔔</div>
+      <div class="tool-info">
+        <div class="tool-name">スケジュールアラーム</div>
+        <div class="tool-desc">予定とアラームの管理</div>
+      </div>
+      <span class="tool-arrow">›</span>
+    </a>
+
+    <a class="tool-card" href="stock-calendar.html">
+      <div class="tool-icon">📅</div>
+      <div class="tool-info">
+        <div class="tool-name">株カレンダー</div>
+        <div class="tool-desc">株式イベントのカレンダー管理</div>
+      </div>
+      <span class="tool-arrow">›</span>
+    </a>
+
+  </div>
+</main>
+
+<footer>🌼 My Tools &nbsp;·&nbsp; Kiyooo</footer>
+
 </body>
 </html>
