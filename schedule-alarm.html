@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>スケジュール＆アラーム</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0d0d14;
+  --surface: #16161f;
+  --surface2: #1e1e2a;
+  --border: #2a2a38;
+  --accent: #f5c842;
+  --accent2: #e06b50;
+  --green: #4ecb8d;
+  --text: #ededf2;
+  --text2: #7878a0;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  overflow-x: hidden;
+}
+
+/* BANNER */
+#banner {
+  position: fixed;
+  top: -140px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(96vw, 400px);
+  background: linear-gradient(135deg, #1c1c28 0%, #252535 100%);
+  border: 1.5px solid var(--accent);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  box-shadow: 0 12px 48px rgba(245,200,66,0.3);
+  transition: top 0.5s cubic-bezier(0.34,1.5,0.64,1);
+}
+#banner.show { top: 20px; }
+#banner .bell { font-size: 28px; }
+#banner.show .bell { animation: ring 0.4s ease 0.3s 4; }
+@keyframes ring {
+  0%,100% { transform: rotate(0); }
+  25% { transform: rotate(-15deg); }
+  75% { transform: rotate(15deg); }
+}
+#banner .banner-body { flex: 1; min-width: 0; }
+#banner .banner-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 1.5px; margin-bottom: 3px; }
+#banner .banner-label { font-size: 17px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#banner .close-btn {
+  background: rgba(255,255,255,0.08); border: none; color: var(--text2);
+  width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* HEADER */
+header { padding: 32px 20px 16px; text-align: center; }
+header::after { content: ''; display: block; width: 48px; height: 2px; background: var(--accent); margin: 10px auto 0; border-radius: 2px; }
+header h1 { font-size: 20px; font-weight: 900; letter-spacing: 0.04em; }
+#clock { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--accent); margin-top: 6px; letter-spacing: 2px; }
+
+/* TABS */
+.tabs { display: flex; margin: 0 16px 20px; background: var(--surface); border-radius: 10px; padding: 4px; gap: 4px; }
+.tab-btn {
+  flex: 1; padding: 10px 0; border: none; background: transparent; color: var(--text2);
+  font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 14px; font-weight: 700;
+  border-radius: 8px; cursor: pointer; transition: background 0.2s, color 0.2s;
+}
+.tab-btn.active { background: var(--surface2); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+/* SECTIONS */
+.section { display: none; padding: 0 16px; }
+.section.active { display: block; }
+
+/* CARD */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; }
+.card-title { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+
+/* PIE */
+#pie-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+#pie-canvas { display: block; }
+#pie-legend { width: 100%; }
+.legend-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.legend-item:last-child { border-bottom: none; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.legend-name { flex: 1; font-size: 14px; font-weight: 700; }
+.legend-meta { text-align: right; }
+.legend-time-range { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); display: block; }
+.legend-pct { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); display: block; margin-top: 1px; }
+
+/* FORM */
+.form-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+.form-row label { font-size: 12px; color: var(--text2); width: 52px; flex-shrink: 0; font-weight: 500; }
+input[type="text"], input[type="time"], input[type="number"] {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 15px;
+  padding: 10px 12px; width: 100%; outline: none; -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+input:focus { border-color: var(--accent); }
+input[type="color"] {
+  width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface2); padding: 3px; cursor: pointer; flex-shrink: 0;
+}
+.time-range-row { display: flex; align-items: center; gap: 6px; }
+.time-range-row input { flex: 1; }
+.time-sep { color: var(--text2); font-size: 14px; flex-shrink: 0; }
+
+.btn {
+  width: 100%; padding: 13px; border: none; border-radius: 10px;
+  font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+}
+.btn:active { transform: scale(0.97); opacity: 0.8; }
+.btn-primary { background: var(--accent); color: #0d0d14; }
+.btn-danger { background: rgba(224,107,80,0.12); color: var(--accent2); border: 1px solid rgba(224,107,80,0.25); margin-top: 12px; }
+.btn-sm {
+  padding: 6px 12px; font-size: 12px; border-radius: 8px; border: none;
+  font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 700; cursor: pointer;
+  background: rgba(224,107,80,0.12); color: var(--accent2); flex-shrink: 0;
+}
+
+/* BLOCK LIST */
+.block-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.block-item:last-child { border-bottom: none; }
+.block-color { width: 8px; height: 40px; border-radius: 4px; flex-shrink: 0; }
+.block-info { flex: 1; min-width: 0; }
+.block-name { font-size: 15px; font-weight: 700; }
+.block-sub { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+/* ALARM LIST */
+.alarm-item { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.alarm-item:last-child { border-bottom: none; }
+.alarm-time { font-family: 'DM Mono', monospace; font-size: 20px; color: var(--accent); flex-shrink: 0; min-width: 64px; }
+.alarm-label { flex: 1; font-size: 14px; font-weight: 500; }
+.alarm-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; flex-shrink: 0; }
+.badge-pending { background: rgba(78,203,141,0.15); color: var(--green); }
+.badge-done { background: rgba(120,120,160,0.1); color: var(--text2); }
+
+/* TOGGLE */
+.toggle-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.toggle-wrap span { font-size: 14px; color: var(--text2); flex: 1; }
+.toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: var(--border); border-radius: 26px; cursor: pointer; transition: background 0.2s; }
+.toggle-slider::before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
+.toggle input:checked + .toggle-slider { background: var(--accent); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+.empty { text-align: center; color: var(--text2); padding: 24px 0; font-size: 14px; }
+.hint { font-size: 11px; color: var(--text2); margin-top: 8px; text-align: center; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div id="banner">
+  <div class="bell">🔔</div>
+  <div class="banner-body">
+    <div class="banner-time" id="banner-time"></div>
+    <div class="banner-label" id="banner-label"></div>
+  </div>
+  <button class="close-btn" onclick="closeBanner()">✕</button>
+</div>
+
+<header>
+  <h1>📅 スケジュール＆アラーム</h1>
+  <div id="clock">--:--:--</div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('chart',this)">🥧 円グラフ</button>
+  <button class="tab-btn" onclick="switchTab('alarms',this)">⏰ アラーム</button>
+</div>
+
+<!-- CHART TAB -->
+<div class="section active" id="tab-chart">
+  <div class="card">
+    <div class="card-title">ブロック追加</div>
+    <div class="form-row">
+      <label>項目名</label>
+      <input type="text" id="block-name" placeholder="例：お昼" maxlength="20">
+    </div>
+    <div class="form-row">
+      <label>時間帯</label>
+      <div class="time-range-row" style="flex:1">
+        <input type="time" id="block-start">
+        <span class="time-sep">〜</span>
+        <input type="time" id="block-end">
+      </div>
+    </div>
+    <div class="form-row">
+      <label>色</label>
+      <input type="color" id="block-color" value="#f5c842">
+    </div>
+    <button class="btn btn-primary" onclick="addBlock()">＋ 追加</button>
+    <p class="hint">※ 日をまたぐ場合（例：23:00〜06:00）も入力できます</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1日の内訳（24時間）</div>
+    <div id="pie-wrap">
+      <canvas id="pie-canvas" width="280" height="280"></canvas>
+      <div id="pie-legend"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">登録済みブロック</div>
+    <div id="block-list"><p class="empty">まだブロックがありません</p></div>
+  </div>
+</div>
+
+<!-- ALARM TAB -->
+<div class="section" id="tab-alarms">
+  <div class="card">
+    <div class="card-title">アラーム追加</div>
+    <div class="form-row">
+      <label>時刻</label>
+      <input type="time" id="alarm-time">
+    </div>
+    <div class="form-row">
+      <label>ラベル</label>
+      <input type="text" id="alarm-label" placeholder="例：起きる" maxlength="30">
+    </div>
+    <button class="btn btn-primary" onclick="addAlarm()">＋ アラーム追加</button>
+  </div>
+
+  <div class="card">
+    <div class="toggle-wrap">
+      <span>🔊 アラーム音を有効にする</span>
+      <label class="toggle">
+        <input type="checkbox" id="sound-toggle" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="card-title">登録済みアラーム</div>
+    <div id="alarm-list"><p class="empty">まだアラームがありません</p></div>
+    <button class="btn btn-danger" onclick="clearDone()">✓ 済みのアラームを削除</button>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+let blocks = [];
+let alarms = [];
+try { blocks = JSON.parse(localStorage.getItem('sched_blocks2') || '[]'); } catch(e){}
+try { alarms = JSON.parse(localStorage.getItem('sched_alarms2') || '[]'); } catch(e){}
+
+let audioCtx = null;
+let bannerTimer = null;
+let lastMinute = '';
+
+// ── UTILS ──
+function timeToMinutes(t) {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
+}
+function minutesToTime(m) {
+  const hh = String(Math.floor(m / 60) % 24).padStart(2,'0');
+  const mm = String(m % 60).padStart(2,'0');
+  return `${hh}:${mm}`;
+}
+function blockDurationH(b) {
+  let start = timeToMinutes(b.start);
+  let end = timeToMinutes(b.end);
+  if (end <= start) end += 1440; // overnight
+  return (end - start) / 60;
+}
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
+  const cur = `${hh}:${mm}`;
+  if (cur !== lastMinute) { lastMinute = cur; checkAlarms(cur); }
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── BLOCKS ──
+function addBlock() {
+  const name = document.getElementById('block-name').value.trim();
+  const start = document.getElementById('block-start').value;
+  const end = document.getElementById('block-end').value;
+  const color = document.getElementById('block-color').value;
+  if (!name) { alert('項目名を入力してください'); return; }
+  if (!start || !end) { alert('開始・終了時刻を入力してください'); return; }
+  if (start === end) { alert('開始と終了が同じです'); return; }
+  blocks.push({ id: Date.now(), name, start, end, color });
+  save();
+  document.getElementById('block-name').value = '';
+  document.getElementById('block-start').value = '';
+  document.getElementById('block-end').value = '';
+  renderBlocks();
+  drawPie();
+}
+
+function deleteBlock(id) {
+  blocks = blocks.filter(b => b.id !== id);
+  save();
+  renderBlocks();
+  drawPie();
+}
+
+function renderBlocks() {
+  const el = document.getElementById('block-list');
+  if (!blocks.length) { el.innerHTML = '<p class="empty">まだブロックがありません</p>'; return; }
+  // sort by start time
+  const sorted = [...blocks].sort((a,b) => a.start.localeCompare(b.start));
+  el.innerHTML = sorted.map(b => {
+    const h = blockDurationH(b).toFixed(1);
+    return `
+    <div class="block-item">
+      <div class="block-color" style="background:${b.color}"></div>
+      <div class="block-info">
+        <div class="block-name">${b.name}</div>
+        <div class="block-sub">${b.start} 〜 ${b.end} &nbsp;(${h}h)</div>
+      </div>
+      <button class="btn-sm" onclick="deleteBlock(${b.id})">削除</button>
+    </div>`;
+  }).join('');
+}
+
+// ── PIE CHART ──
+function drawPie() {
+  const canvas = document.getElementById('pie-canvas');
+  const ctx = canvas.getContext('2d');
+  const SIZE = 280;
+  canvas.width = SIZE; canvas.height = SIZE;
+  const cx = SIZE/2, cy = SIZE/2, r = SIZE/2 - 20;
+  ctx.clearRect(0, 0, SIZE, SIZE);
+
+  // background circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.fillStyle = '#1e1e2a';
+  ctx.fill();
+
+  if (!blocks.length) {
+    ctx.fillStyle = '#7878a0';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('データなし', cx, cy);
+    document.getElementById('pie-legend').innerHTML = '';
+    return;
+  }
+
+  // 0:00 = top = -π/2
+  // 24h = full circle
+  // angle = -π/2 + (minutes/1440)*2π
+  function timeAngle(t) {
+    const mins = timeToMinutes(t);
+    return -Math.PI/2 + (mins / 1440) * Math.PI * 2;
+  }
+
+  // draw slices
+  blocks.forEach(b => {
+    let startMins = timeToMinutes(b.start);
+    let endMins = timeToMinutes(b.end);
+    if (endMins <= startMins) endMins += 1440;
+
+    const startAngle = -Math.PI/2 + (startMins / 1440) * Math.PI * 2;
+    const endAngle   = -Math.PI/2 + (endMins   / 1440) * Math.PI * 2;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fillStyle = b.color;
+    ctx.fill();
+    ctx.strokeStyle = '#0d0d14';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // label inside slice
+    const midAngle = (startAngle + endAngle) / 2;
+    const sliceSpan = endAngle - startAngle;
+    if (sliceSpan > 0.2) {
+      const lx = cx + Math.cos(midAngle) * r * 0.62;
+      const ly = cy + Math.sin(midAngle) * r * 0.62;
+      ctx.save();
+      ctx.fillStyle = 'rgba(0,0,0,0.8)';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(b.name, lx, ly);
+      ctx.restore();
+    }
+  });
+
+  // draw boundary time labels on the rim
+  const drawnAngles = new Set();
+  blocks.forEach(b => {
+    [[b.start, timeToMinutes(b.start)], [b.end, timeToMinutes(b.end) === timeToMinutes(b.start) ? timeToMinutes(b.end) : timeToMinutes(b.end)]].forEach(([t]) => {
+      drawTimeLabel(ctx, cx, cy, r, t, drawnAngles);
+    });
+  });
+
+  // donut hole
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.34, 0, Math.PI*2);
+  ctx.fillStyle = '#0d0d14';
+  ctx.fill();
+
+  // center text
+  const totalH = blocks.reduce((s,b) => s + blockDurationH(b), 0);
+  ctx.fillStyle = '#f5c842';
+  ctx.font = 'bold 13px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(totalH.toFixed(1) + 'h', cx, cy);
+
+  // legend
+  const sorted = [...blocks].sort((a,b) => a.start.localeCompare(b.start));
+  document.getElementById('pie-legend').innerHTML = sorted.map(b => {
+    const h = blockDurationH(b).toFixed(1);
+    const pct = Math.round(blockDurationH(b)/24*100);
+    return `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${b.color}"></div>
+      <div class="legend-name">${b.name}</div>
+      <div class="legend-meta">
+        <span class="legend-time-range">${b.start}〜${b.end}</span>
+        <span class="legend-pct">${h}h &nbsp;${pct}%</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function drawTimeLabel(ctx, cx, cy, r, timeStr, drawn) {
+  const mins = timeToMinutes(timeStr);
+  const key = Math.round(mins / 5); // dedupe within 5min
+  if (drawn.has(key)) return;
+  drawn.add(key);
+
+  const angle = -Math.PI/2 + (mins / 1440) * Math.PI * 2;
+  const labelR = r + 13;
+  const lx = cx + Math.cos(angle) * labelR;
+  const ly = cy + Math.sin(angle) * labelR;
+
+  // tick line
+  const tx1 = cx + Math.cos(angle) * (r - 2);
+  const ty1 = cy + Math.sin(angle) * (r - 2);
+  const tx2 = cx + Math.cos(angle) * (r + 5);
+  const ty2 = cy + Math.sin(angle) * (r + 5);
+  ctx.beginPath();
+  ctx.moveTo(tx1, ty1);
+  ctx.lineTo(tx2, ty2);
+  ctx.strokeStyle = 'rgba(245,200,66,0.6)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // label
+  ctx.save();
+  ctx.font = '9px DM Mono, monospace';
+  ctx.fillStyle = '#f5c842';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(timeStr, lx, ly);
+  ctx.restore();
+}
+
+// ── ALARMS ──
+function addAlarm() {
+  const time = document.getElementById('alarm-time').value;
+  const label = document.getElementById('alarm-label').value.trim();
+  if (!time || !label) { alert('時刻とラベルを入力してください'); return; }
+  alarms.push({ id: Date.now(), time, label, done: false });
+  alarms.sort((a,b) => a.time.localeCompare(b.time));
+  save();
+  document.getElementById('alarm-time').value = '';
+  document.getElementById('alarm-label').value = '';
+  renderAlarms();
+}
+
+function deleteAlarm(id) {
+  alarms = alarms.filter(a => a.id !== id);
+  save();
+  renderAlarms();
+}
+
+function clearDone() {
+  const before = alarms.length;
+  alarms = alarms.filter(a => !a.done);
+  save();
+  renderAlarms();
+  if (alarms.length === before) alert('済みのアラームはありません');
+}
+
+function renderAlarms() {
+  const el = document.getElementById('alarm-list');
+  if (!alarms.length) { el.innerHTML = '<p class="empty">まだアラームがありません</p>'; return; }
+  el.innerHTML = alarms.map(a => `
+    <div class="alarm-item">
+      <div class="alarm-time">${a.time}</div>
+      <div class="alarm-label">${a.label}</div>
+      <span class="alarm-badge ${a.done ? 'badge-done' : 'badge-pending'}">${a.done ? '済' : '待機'}</span>
+      <button class="btn-sm" onclick="deleteAlarm(${a.id})">削除</button>
+    </div>
+  `).join('');
+}
+
+// ── ALARM CHECK ──
+function checkAlarms(cur) {
+  let changed = false;
+  alarms.forEach(a => {
+    if (!a.done && a.time === cur) {
+      a.done = true; changed = true;
+      showBanner(a.time, a.label);
+    }
+  });
+  if (changed) { save(); renderAlarms(); }
+}
+
+// ── BANNER ──
+function showBanner(time, label) {
+  document.getElementById('banner-time').textContent = time;
+  document.getElementById('banner-label').textContent = label;
+  const banner = document.getElementById('banner');
+  banner.classList.remove('show');
+  void banner.offsetWidth;
+  banner.classList.add('show');
+  if (bannerTimer) clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(closeBanner, 30000);
+  if (document.getElementById('sound-toggle').checked) playSound();
+}
+
+function closeBanner() {
+  document.getElementById('banner').classList.remove('show');
+  if (bannerTimer) clearTimeout(bannerTimer);
+}
+
+// ── SOUND ──
+function playSound() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const melody = [[659,0],[784,0.18],[880,0.36],[784,0.6],[659,0.78],[523,0.96],[659,1.2],[880,1.38]];
+    melody.forEach(([freq, delay]) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sine'; osc.frequency.value = freq;
+      const t = audioCtx.currentTime + delay;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.35, t + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      osc.start(t); osc.stop(t + 0.25);
+    });
+  } catch(e) {}
+}
+
+document.addEventListener('touchstart', () => {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}, { passive: true });
+
+// ── SAVE ──
+function save() {
+  try {
+    localStorage.setItem('sched_blocks2', JSON.stringify(blocks));
+    localStorage.setItem('sched_alarms2', JSON.stringify(alarms));
+  } catch(e) {}
+}
+
+// ── INIT ──
+renderBlocks();
+drawPie();
+renderAlarms();
+</script>
+</body>
+</html>

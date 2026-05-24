@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>株カレンダー 📈</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #fce4ec 0%, #f3e5f5 40%, #e3f2fd 100%);
+    padding: 20px 16px 40px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* 雲デコ */
+  .cloud-deco {
+    position: fixed;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* タイトル */
+  .title-wrap { text-align: center; margin-bottom: 18px; position: relative; z-index: 1; }
+  .title-row { display: inline-flex; align-items: center; gap: 10px; }
+  .title-text {
+    font-size: 26px; font-weight: 900; letter-spacing: 3px;
+    background: linear-gradient(135deg, #e91e63, #9c27b0);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .title-sub { margin-top: 4px; color: #ce93d8; font-size: 12px; }
+
+  /* ボタン共通 */
+  .btn-register-wrap { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; z-index: 1; position: relative; }
+  .btn-event {
+    display: flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: 22px; border: none; color: #fff;
+    font-weight: 800; font-size: 13px; cursor: pointer;
+    background: linear-gradient(135deg, #f48fb1, #e91e63);
+    box-shadow: 0 3px 12px rgba(233,30,99,0.3);
+  }
+  .btn-earnings {
+    display: flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: 22px; border: none; color: #fff;
+    font-weight: 800; font-size: 13px; cursor: pointer;
+    background: linear-gradient(135deg, #ffe082, #f57f17);
+    box-shadow: 0 3px 12px rgba(245,127,23,0.3);
+  }
+
+  /* ナビ */
+  .nav-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 1; }
+  .btn-nav {
+    background: #fff; border: 1.5px solid #f8bbd0; border-radius: 50%;
+    width: 34px; height: 34px; cursor: pointer; font-size: 18px; color: #e91e63;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-center { text-align: center; }
+  .nav-label { font-weight: 700; color: #5d4037; font-size: 14px; }
+  .view-toggle { display: flex; gap: 6px; margin-top: 4px; justify-content: center; }
+  .btn-view {
+    padding: 3px 14px; border-radius: 16px; border: none; cursor: pointer;
+    font-size: 11px; font-weight: 700;
+  }
+  .btn-view.active { background: linear-gradient(135deg, #f48fb1, #e91e63); color: #fff; }
+  .btn-view.inactive { background: #fce4ec; color: #e91e63; }
+
+  /* 凡例 */
+  .legend-wrap { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; position: relative; z-index: 1; }
+  .legend-item { font-size: 10px; color: #5d4037; background: #fff; border-radius: 12px; padding: 2px 8px; font-weight: 600; }
+
+  /* カレンダー本体 */
+  .calendar-wrap {
+    background: rgba(255,255,255,0.7); border-radius: 20px; padding: 10px;
+    box-shadow: 0 4px 24px rgba(244,143,177,0.15);
+    backdrop-filter: blur(8px); border: 2px solid rgba(248,187,208,0.4);
+    position: relative; z-index: 1;
+  }
+
+  /* 週表示グリッド */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .day-cell {
+    border-radius: 14px; border: 1.5px solid rgba(248,187,208,0.3);
+    padding: 8px 5px; min-height: 130px;
+    background: linear-gradient(145deg, #fff9fb, #fff);
+  }
+  .day-cell.today { background: linear-gradient(145deg, #fce4ec, #f8bbd0); border: 2px solid #f48fb1; }
+  .day-cell.sat { background: linear-gradient(145deg, #e3f2fd, #f3e5f5); }
+  .day-cell.sun { background: linear-gradient(145deg, #fce4ec, #fff3e0); }
+  .day-header { text-align: center; margin-bottom: 6px; }
+  .day-name { font-size: 10px; font-weight: 700; color: #90a4ae; }
+  .day-name.sat { color: #5c6bc0; }
+  .day-name.sun { color: #e91e63; }
+  .day-num { font-size: 18px; font-weight: 900; color: #5d4037; }
+  .day-num.sat { color: #5c6bc0; }
+  .day-num.sun, .day-num.today { color: #e91e63; }
+  .btn-add { background: none; border: none; color: #f8bbd0; font-size: 18px; cursor: pointer; display: block; margin: 4px auto 0; }
+
+  /* 月表示グリッド */
+  .month-header-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 6px; }
+  .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .month-day-head { text-align: center; font-size: 11px; font-weight: 700; color: #90a4ae; padding: 4px 0; }
+  .month-day-head.sat { color: #5c6bc0; }
+  .month-day-head.sun { color: #e91e63; }
+  .month-cell {
+    min-height: 64px; border-radius: 10px; padding: 4px 3px;
+    border: 1px solid rgba(248,187,208,0.25);
+    background: rgba(255,255,255,0.8);
+  }
+  .month-cell.today { background: linear-gradient(145deg, #fce4ec, #f8bbd0); border: 2px solid #f48fb1; }
+  .month-cell.sat { background: #e3f2fd; }
+  .month-cell.sun { background: #fce4ec; }
+  .month-date-num { text-align: center; font-size: 11px; font-weight: 600; color: #5d4037; margin-bottom: 2px; }
+  .month-date-num.today { font-weight: 900; color: #e91e63; }
+  .month-date-num.sat { color: #5c6bc0; }
+  .month-date-num.sun { color: #e91e63; }
+  .month-more { font-size: 8px; color: #ce93d8; font-weight: 700; text-align: center; }
+
+  /* イベントチップ */
+  .chip { border-radius: 8px; padding: 3px 6px; margin-bottom: 3px; cursor: pointer; }
+  .chip-earnings { background: linear-gradient(135deg, #fff9c4, #fff3e0); border: 1.5px solid #ffe082; }
+  .chip-important { background: linear-gradient(135deg, #ffebee, #fce4ec); border: 1.5px solid #ef9a9a; }
+  .chip-approx { background: linear-gradient(135deg, #e3f2fd, #e8f5e9); border: 1.5px dashed #90caf9; }
+  .chip-japan { background: linear-gradient(135deg, #e1f5fe, #f3e5f5); border: 1.5px solid #81d4fa; }
+  .chip-overseas { background: linear-gradient(135deg, #fce4ec, #f3e5f5); border: 1.5px solid #f48fb1; }
+  .chip-time { color: #f57f17; font-weight: 800; font-size: 9px; }
+  .chip-title { font-weight: 700; font-size: 10px; display: flex; align-items: center; gap: 2px; }
+  .chip-title.important { color: #c62828; }
+  .chip-title.approx { color: #1565c0; font-weight: 600; }
+  .chip-title.normal { color: #37474f; font-weight: 600; }
+  .chip-title.earnings { color: #5d4037; }
+
+  /* 月表示内ミニチップ */
+  .mini-chip {
+    font-size: 8px; border-radius: 6px; padding: 1px 4px; margin-bottom: 1px;
+    cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 600;
+  }
+
+  /* フッター */
+  .footer-wrap {
+    margin-top: 18px; background: rgba(255,255,255,0.6); border-radius: 20px; padding: 12px 16px;
+    border: 2px dashed rgba(248,187,208,0.5); backdrop-filter: blur(4px); position: relative; z-index: 1;
+  }
+  .footer-title { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .footer-items { display: flex; flex-wrap: wrap; gap: 10px; }
+  .footer-item { font-size: 11px; color: #5d4037; }
+
+  /* モーダル */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(255,182,193,0.35);
+    backdrop-filter: blur(4px); display: flex; align-items: center;
+    justify-content: center; z-index: 1000;
+  }
+  .modal-box {
+    background: linear-gradient(145deg, #fff9fb, #fff);
+    border-radius: 24px; padding: 24px; min-width: 320px; max-width: 440px; width: 90%;
+    box-shadow: 0 8px 40px rgba(244,143,177,0.3);
+    border: 2px solid #f8bbd0; position: relative;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-close {
+    position: absolute; top: 12px; right: 14px;
+    background: #fce4ec; border: none; border-radius: 50%;
+    width: 28px; height: 28px; cursor: pointer; font-size: 14px; color: #c62828;
+  }
+  .modal-title { margin-bottom: 14px; font-size: 17px; }
+  .modal-title.pink { color: #c2185b; }
+  .modal-title.brown { color: #5d4037; }
+  .modal-label { font-size: 12px; color: #90a4ae; display: block; margin-bottom: 4px; }
+  .modal-field { margin-bottom: 12px; }
+  .modal-input {
+    width: 100%; padding: 8px 10px; border-radius: 12px; font-size: 13px; outline: none;
+  }
+  .modal-input.pink { border: 1.5px solid #f8bbd0; }
+  .modal-input.yellow { border: 1.5px solid #ffe082; }
+  .modal-select {
+    width: 100%; padding: 8px 10px; border-radius: 12px; font-size: 13px;
+    outline: none; background: #fff; border: 1.5px solid #ffe082;
+  }
+  .modal-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .modal-row > div { flex: 1; }
+  .modal-region-btns { display: flex; gap: 8px; }
+  .modal-region-btn {
+    flex: 1; padding: 7px 0; border-radius: 20px; border: none; cursor: pointer;
+    font-weight: 700; font-size: 13px;
+  }
+  .modal-check-row { display: flex; gap: 10px; margin-bottom: 16px; font-size: 12px; }
+  .modal-check-row label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .btn-save-pink {
+    width: 100%; padding: 10px 0; border-radius: 20px;
+    background: linear-gradient(135deg, #f48fb1, #f06292);
+    border: none; color: #fff; font-weight: 800; font-size: 14px; cursor: pointer;
+  }
+  .btn-save-yellow {
+    width: 100%; padding: 10px 0; border-radius: 20px;
+    background: linear-gradient(135deg, #ffe082, #ffca28);
+    border: none; color: #5d4037; font-weight: 800; font-size: 14px; cursor: pointer;
+  }
+  .ai-btn {
+    padding: 8px 14px; border-radius: 12px; border: none;
+    background: linear-gradient(135deg, #ffe082, #ffca28);
+    color: #5d4037; font-weight: 800; font-size: 12px; cursor: pointer; white-space: nowrap;
+  }
+  .ai-btn:disabled { background: #f5f5f5; color: #aaa; cursor: not-allowed; }
+  .ai-note { margin-top: 6px; font-size: 11px; font-weight: 700; }
+  .ai-note.ok { color: #4caf50; }
+  .ai-note.err { color: #ef5350; }
+  .trend-btns { display: flex; gap: 6px; }
+  .trend-btn {
+    flex: 1; padding: 7px 4px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer;
+  }
+  .confirm-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+  .confirm-key { width: 90px; font-size: 11px; font-weight: 700; color: #5d4037; background: #fff9c4; border-radius: 8px; padding: 4px 8px; flex-shrink: 0; }
+  .confirm-val { font-size: 13px; color: #37474f; }
+  .confirm-btns { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-back { flex: 1; padding: 9px 0; border-radius: 20px; border: 1.5px solid #f8bbd0; background: #fff; cursor: pointer; font-size: 13px; color: #90a4ae; }
+  .btn-confirm-save { flex: 1; padding: 9px 0; border-radius: 20px; border: none; background: linear-gradient(135deg, #ffe082, #ffca28); cursor: pointer; font-size: 13px; font-weight: 800; color: #5d4037; }
+  .detail-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .detail-key { width: 110px; font-size: 11px; font-weight: 700; color: #5d4037; background: #fff9c4; border-radius: 8px; padding: 4px 8px; flex-shrink: 0; }
+  .detail-val { font-size: 13px; color: #37474f; }
+  .region-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 9px; font-weight: 700; border-radius: 20px; padding: 1px 7px 1px 4px; margin-bottom: 8px;
+  }
+  .region-badge.japan { background: #b3e5fc; border: 1px solid #81d4fa; color: #333; }
+  .region-badge.overseas { background: #fce4ec; border: 1px solid #f8bbd0; color: #333; }
+  .hidden { display: none; }
+  #ticker-input-wrap { position: relative; }
+  #ticker-suggestions {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: #fff; border: 1.5px solid #ffe082; border-radius: 12px;
+    z-index: 200; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;
+  }
+  .suggestion-item {
+    padding: 8px 12px; cursor: pointer; font-size: 13px;
+    display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #fff9c4;
+  }
+  .suggestion-item:hover { background: #fff9c4; }
+  .suggestion-code { font-weight: 700; color: #f57f17; }
+  .suggestion-name { color: #5d4037; }
+  #selected-stock-note { margin-top: 4px; font-size: 11px; color: #4caf50; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- 雲デコ -->
+<div class="cloud-deco" style="top:10px;left:-20px;transform:scale(1.2)">
+  <svg width="80" height="50" viewBox="0 0 80 50" fill="none">
+    <ellipse cx="40" cy="35" rx="30" ry="18" fill="#fce4ec"/>
+    <ellipse cx="25" cy="30" rx="18" ry="14" fill="#fce4ec"/>
+    <ellipse cx="55" cy="30" rx="18" ry="14" fill="#fce4ec"/>
+    <ellipse cx="40" cy="22" rx="20" ry="16" fill="#fce4ec"/>
+    <ellipse cx="28" cy="18" rx="13" ry="11" fill="#fce4ec"/>
+    <ellipse cx="53" cy="20" rx="13" ry="11" fill="#fce4ec"/>
+  </svg>
+</div>
+<div class="cloud-deco" style="top:60px;right:-10px;transform:scale(0.8)">
+  <svg width="80" height="50" viewBox="0 0 80 50" fill="none">
+    <ellipse cx="40" cy="35" rx="30" ry="18" fill="#fce4ec"/>
+    <ellipse cx="25" cy="30" rx="18" ry="14" fill="#fce4ec"/>
+    <ellipse cx="55" cy="30" rx="18" ry="14" fill="#fce4ec"/>
+    <ellipse cx="40" cy="22" rx="20" ry="16" fill="#fce4ec"/>
+    <ellipse cx="28" cy="18" rx="13" ry="11" fill="#fce4ec"/>
+    <ellipse cx="53" cy="20" rx="13" ry="11" fill="#fce4ec"/>
+  </svg>
+</div>
+<div class="cloud-deco" style="bottom:80px;right:-15px;transform:scale(1.3)">
+  <svg width="80" height="50" viewBox="0 0 80 50" fill="none">
+    <ellipse cx="40" cy="35" rx="30" ry="18" fill="#fce4ec"/>
+    <ellipse cx="25" cy="30" rx="18" ry="14" fill="#fce4ec"/>
+    <ellipse cx="55" cy="30" rx="18" ry="14" fill="#fce4ec"/>
+    <ellipse cx="40" cy="22" rx="20" ry="16" fill="#fce4ec"/>
+    <ellipse cx="28" cy="18" rx="13" ry="11" fill="#fce4ec"/>
+    <ellipse cx="53" cy="20" rx="13" ry="11" fill="#fce4ec"/>
+  </svg>
+</div>
+
+<!-- タイトル -->
+<div class="title-wrap">
+  <div class="title-row">
+    <span style="font-size:26px">📈</span>
+    <h1 class="title-text">株カレンダー</h1>
+    <span style="font-size:26px">🌸</span>
+  </div>
+  <p class="title-sub">投資家向けスケジュール管理</p>
+</div>
+
+<!-- 登録ボタン -->
+<div class="btn-register-wrap">
+  <button class="btn-event" onclick="openEventModal('')">📅 内容登録</button>
+  <button class="btn-earnings" onclick="openEarningsModal('')">📊 決算登録</button>
+</div>
+
+<!-- ナビ -->
+<div class="nav-wrap">
+  <button class="btn-nav" onclick="navigate(-1)">‹</button>
+  <div class="nav-center">
+    <div class="nav-label" id="nav-label"></div>
+    <div class="view-toggle">
+      <button class="btn-view" id="btn-weekly" onclick="setView('weekly')">週</button>
+      <button class="btn-view" id="btn-monthly" onclick="setView('monthly')">月</button>
+    </div>
+  </div>
+  <button class="btn-nav" onclick="navigate(1)">›</button>
+</div>
+
+<!-- 凡例 -->
+<div class="legend-wrap">
+  <span class="legend-item" style="border:1.5px solid #ef9a9a">🔴 重要イベント</span>
+  <span class="legend-item" style="border:1.5px solid #ffe082">📊 決算</span>
+  <span class="legend-item" style="border:1.5px solid #90caf9">〜 おおよそ</span>
+  <span class="legend-item" style="border:1.5px solid #b3e5fc">🇯🇵 日本</span>
+  <span class="legend-item" style="border:1.5px solid #fce4ec">🌐 海外</span>
+</div>
+
+<!-- カレンダー本体 -->
+<div class="calendar-wrap" id="calendar-wrap"></div>
+
+<!-- フッター -->
+<div class="footer-wrap">
+  <div class="footer-title">
+    <span style="font-size:16px">☁️</span>
+    <span style="font-size:11px;font-weight:700;color:#ce93d8">凡例メモ</span>
+  </div>
+  <div class="footer-items">
+    <div class="footer-item">🔴 重要チェック → 赤・上部表示</div>
+    <div class="footer-item">〜 おおよそ → 青・点線・下部表示</div>
+    <div class="footer-item">↑ 増収増益予想　↓ 減収減益予想</div>
+  </div>
+</div>
+
+<!-- ===== イベント登録モーダル ===== -->
+<div class="modal-overlay hidden" id="modal-event" onclick="closeModalIf(event,'modal-event')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-event')">✕</button>
+    <h3 class="modal-title pink">📅 イベント登録</h3>
+    <div class="modal-field">
+      <label class="modal-label">地域</label>
+      <div class="modal-region-btns">
+        <button class="modal-region-btn" id="btn-region-japan" onclick="selectRegion('japan')" style="background:#b3e5fc;color:#333">🇯🇵 日本</button>
+        <button class="modal-region-btn" id="btn-region-overseas" onclick="selectRegion('overseas')" style="background:#f5f5f5;color:#aaa">🌐 海外</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">日時</label>
+      <input type="date" id="ev-date" class="modal-input pink">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">内容</label>
+      <input type="text" id="ev-title" class="modal-input pink" placeholder="例：FOMC、日銀会合...">
+    </div>
+    <div class="modal-check-row">
+      <label><input type="checkbox" id="ev-important"> 🔴 重要チェック</label>
+      <label><input type="checkbox" id="ev-approx"> 〜 おおよその日程</label>
+    </div>
+    <button class="btn-save-pink" onclick="saveEvent()">保存する 💾</button>
+  </div>
+</div>
+
+<!-- ===== 決算登録モーダル ===== -->
+<div class="modal-overlay hidden" id="modal-earnings" onclick="closeModalIf(event,'modal-earnings')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-earnings')">✕</button>
+    <h3 class="modal-title brown">📊 決算登録</h3>
+    <p style="margin-bottom:14px;font-size:11px;color:#ce93d8">コードを入力して ✨AI自動入力 が使えます</p>
+    <div class="modal-field">
+      <label class="modal-label">銘柄コード</label>
+      <div style="display:flex;gap:6px" id="ticker-input-wrap">
+        <input type="text" id="er-ticker" class="modal-input yellow" placeholder="例：7203" style="flex:1;font-size:16px;font-weight:700" onkeydown="if(event.key==='Enter')fetchEarnings()">
+        <button class="ai-btn" id="ai-btn" onclick="fetchEarnings()">✨ AI入力</button>
+        <div id="ticker-suggestions" class="hidden"></div>
+      </div>
+      <div id="selected-stock-note" class="hidden"></div>
+      <div id="ai-note" class="ai-note hidden"></div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">銘柄名</label>
+      <input type="text" id="er-name" class="modal-input yellow" placeholder="（AI自動入力 or 手動）">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">決算日</label>
+      <input type="date" id="er-date" class="modal-input yellow">
+    </div>
+    <div class="modal-row">
+      <div>
+        <label class="modal-label">発表時間</label>
+        <input type="text" id="er-time" class="modal-input yellow" placeholder="15:30〜">
+      </div>
+      <div>
+        <label class="modal-label">決算種別</label>
+        <select id="er-type" class="modal-select">
+          <option>本決算</option><option>Q1</option><option>Q2</option><option>Q3</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-row">
+      <div>
+        <label class="modal-label">前年度実績</label>
+        <input type="text" id="er-prev" class="modal-input yellow" placeholder="例：4.9兆円">
+      </div>
+      <div>
+        <label class="modal-label">今年度実績予想</label>
+        <input type="text" id="er-forecast" class="modal-input yellow" placeholder="例：5.1兆円">
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">前年比較</label>
+      <div class="trend-btns">
+        <button class="trend-btn" id="trend-up" onclick="selectTrend('up')" style="border:2px solid #2e7d32;background:#e8f5e9;color:#2e7d32">↑ 増収・増益</button>
+        <button class="trend-btn" id="trend-down" onclick="selectTrend('down')" style="border:2px solid #bdbdbd;background:#fafafa;color:#bbb">↓ 減収・減益</button>
+        <button class="trend-btn" id="trend-flat" onclick="selectTrend('flat')" style="border:2px solid #bdbdbd;background:#fafafa;color:#bbb">→ 横ばい</button>
+      </div>
+    </div>
+    <button class="btn-save-yellow" onclick="openEarningsConfirm()">確認する 📋</button>
+  </div>
+</div>
+
+<!-- ===== 決算確認モーダル ===== -->
+<div class="modal-overlay hidden" id="modal-confirm" onclick="closeModalIf(event,'modal-confirm')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-confirm')">✕</button>
+    <h3 class="modal-title brown" style="margin-bottom:14px">📋 カレンダーに保存しますか？</h3>
+    <div id="confirm-content"></div>
+    <div class="confirm-btns">
+      <button class="btn-back" onclick="closeModal('modal-confirm')">戻る</button>
+      <button class="btn-confirm-save" onclick="saveEarnings()">保存 📊</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 詳細モーダル ===== -->
+<div class="modal-overlay hidden" id="modal-detail" onclick="closeModalIf(event,'modal-detail')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-detail')">✕</button>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<script>
+// ============================
+// データ
+// ============================
+let events = [
+  { id:1, type:"event", region:"japan",   date:"2026-05-18", title:"日銀政策会合",    important:true,  approximate:false },
+  { id:2, type:"event", region:"overseas",date:"2026-05-21", title:"FOMC議事録",      important:true,  approximate:false },
+  { id:3, type:"event", region:"overseas",date:"2026-05-22", title:"米CPI発表",       important:false, approximate:false },
+  { id:4, type:"event", region:"japan",   date:"2026-05-20", title:"機械受注統計",    important:false, approximate:false },
+  { id:5, type:"earnings", date:"2026-05-19", ticker:"7203", name:"トヨタ自動車",   time:"15:30〜", earningsType:"本決算", prevActual:"4.94兆円", forecast:"3.8兆円", trend:"down" },
+  { id:6, type:"earnings", date:"2026-05-22", ticker:"9984", name:"ソフトバンクG",  time:"16:00〜", earningsType:"本決算", prevActual:"▲4,300億円", forecast:"1兆円", trend:"up" },
+  { id:7, type:"event", region:"japan",   date:"2026-05-23", title:"消費者物価指数", important:false, approximate:true },
+  { id:8, type:"event", region:"overseas",date:"2026-05-23", title:"米GDP改定値",   important:true,  approximate:false },
+];
+
+const WEEKDAYS = ["月","火","水","木","金","土","日"];
+let currentView = "weekly";
+let baseDate = new Date("2026-05-17");
+let selectedRegion = "japan";
+let selectedTrend = "up";
+let defaultDateStr = "";
+
+// ============================
+// ユーティリティ
+// ============================
+function fmtDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function today() { return fmtDate(new Date()); }
+
+function getWeekDates(base) {
+  const d = new Date(base);
+  const day = d.getDay();
+  const diff = day===0 ? -6 : 1-day;
+  const mon = new Date(d); mon.setDate(d.getDate()+diff);
+  return Array.from({length:7},(_,i)=>{ const dt=new Date(mon); dt.setDate(mon.getDate()+i); return dt; });
+}
+
+function getMonthCells(base) {
+  const y=base.getFullYear(), m=base.getMonth();
+  const first=new Date(y,m,1), last=new Date(y,m+1,0);
+  const startDow=first.getDay()===0?6:first.getDay()-1;
+  const cells=[];
+  for(let i=0;i<startDow;i++) cells.push(null);
+  for(let i=1;i<=last.getDate();i++) cells.push(new Date(y,m,i));
+  return cells;
+}
+
+function getEventsForDate(dateStr) {
+  const evs = events.filter(e=>e.date===dateStr);
+  return [
+    ...evs.filter(e=>e.important),
+    ...evs.filter(e=>e.type==="earnings"),
+    ...evs.filter(e=>!e.important&&!e.approximate&&e.type!=="earnings"),
+    ...evs.filter(e=>e.approximate&&!e.important),
+  ];
+}
+
+function arrowFor(trend) { return trend==="up"?"↑":trend==="down"?"↓":"→"; }
+function arrowColor(trend) { return trend==="up"?"#2e7d32":trend==="down"?"#c62828":"#888"; }
+function trendLabel(trend) { return trend==="up"?"増収・増益予想":trend==="down"?"減収・減益予想":"横ばい"; }
+
+// ============================
+// レンダリング
+// ============================
+function render() {
+  // ナビラベル
+  const weekDates = getWeekDates(baseDate);
+  const wLabel = `${weekDates[0].getMonth()+1}/${weekDates[0].getDate()} 〜 ${weekDates[6].getMonth()+1}/${weekDates[6].getDate()}`;
+  const mLabel = `${baseDate.getFullYear()}年${baseDate.getMonth()+1}月`;
+  document.getElementById("nav-label").textContent = currentView==="weekly"?wLabel:mLabel;
+  document.getElementById("btn-weekly").className = "btn-view "+(currentView==="weekly"?"active":"inactive");
+  document.getElementById("btn-monthly").className = "btn-view "+(currentView==="monthly"?"active":"inactive");
+
+  const wrap = document.getElementById("calendar-wrap");
+  wrap.innerHTML = currentView==="weekly" ? renderWeekly(weekDates) : renderMonthly();
+}
+
+function renderWeekly(weekDates) {
+  let html = `<div class="week-grid">`;
+  weekDates.forEach((date,i)=>{
+    const ds = fmtDate(date);
+    const isToday = ds===today();
+    const isSat = i===5, isSun = i===6;
+    const cls = "day-cell"+(isToday?" today":isSat?" sat":isSun?" sun":"");
+    const nameCls = "day-name"+(isSun?" sun":isSat?" sat":"");
+    const numCls = "day-num"+(isToday?" today":isSun?" sun":isSat?" sat":"");
+    const dayEvs = getEventsForDate(ds);
+    let chipsHtml = dayEvs.map(ev=>chipHtml(ev)).join("");
+    html += `<div class="${cls}">
+      <div class="day-header">
+        <div class="${nameCls}">${WEEKDAYS[i]}</div>
+        <div class="${numCls}">${date.getDate()}</div>
+      </div>
+      <div>${chipsHtml}</div>
+      <button class="btn-add" onclick="openEventModal('${ds}')">+</button>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderMonthly() {
+  const cells = getMonthCells(baseDate);
+  let html = `<div class="month-header-grid">`;
+  WEEKDAYS.forEach((d,i)=>{
+    html += `<div class="month-day-head${i===5?" sat":i===6?" sun":""}">${d}</div>`;
+  });
+  html += `</div><div class="month-grid">`;
+  cells.forEach((date,i)=>{
+    if(!date){ html+=`<div></div>`; return; }
+    const ds = fmtDate(date);
+    const isToday = ds===today();
+    const isSun = date.getDay()===0, isSat = date.getDay()===6;
+    const cls = "month-cell"+(isToday?" today":isSat?" sat":isSun?" sun":"");
+    const numCls = "month-date-num"+(isToday?" today":isSat?" sat":isSun?" sun":"");
+    const dayEvs = getEventsForDate(ds);
+    let miniHtml = dayEvs.slice(0,2).map(ev=>miniChipHtml(ev)).join("");
+    if(dayEvs.length>2) miniHtml += `<div class="month-more">+${dayEvs.length-2}</div>`;
+    html += `<div class="${cls}"><div class="${numCls}">${date.getDate()}</div>${miniHtml}</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function chipHtml(ev) {
+  const re = ev.region==="japan"?"🇯🇵":"🌐";
+  if(ev.type==="earnings"){
+    const a=arrowFor(ev.trend), ac=arrowColor(ev.trend);
+    return `<div class="chip chip-earnings" onclick="showDetail(${ev.id})">
+      <div class="chip-time">${ev.time||""}</div>
+      <div class="chip-title earnings">📊 ${ev.name} <span style="color:${ac};font-weight:900;font-size:13px">${a}</span></div>
+    </div>`;
+  }
+  if(ev.important){
+    return `<div class="chip chip-important" onclick="showDetail(${ev.id})">
+      <div class="chip-title important">🔴 ${re} ${ev.title}</div>
+    </div>`;
+  }
+  if(ev.approximate){
+    return `<div class="chip chip-approx" onclick="showDetail(${ev.id})">
+      <div class="chip-title approx">〜 ${re} ${ev.title}</div>
+    </div>`;
+  }
+  const cls = ev.region==="japan"?"chip-japan":"chip-overseas";
+  return `<div class="chip ${cls}" onclick="showDetail(${ev.id})">
+    <div class="chip-title normal">${re} ${ev.title}</div>
+  </div>`;
+}
+
+function miniChipHtml(ev) {
+  const re = ev.type!=="earnings"?(ev.region==="japan"?"🇯🇵":"🌐"):"";
+  const arrow = ev.trend==="up"?"↑":ev.trend==="down"?"↓":"";
+  let bg,color,border="none";
+  if(ev.type==="earnings"){bg="#fff9c4";color="#5d4037";}
+  else if(ev.important){bg="#ffebee";color="#c62828";}
+  else if(ev.approximate){bg="#e3f2fd";color="#1565c0";border="1px dashed #90caf9";}
+  else if(ev.region==="japan"){bg="#e1f5fe";color="#37474f";}
+  else{bg="#fce4ec";color="#37474f";}
+  const label = ev.type==="earnings"?`📊${ev.name}${arrow}`:`${re}${ev.title}`;
+  return `<div class="mini-chip" style="background:${bg};color:${color};border:${border}" onclick="showDetail(${ev.id})">${label}</div>`;
+}
+
+// ============================
+// ナビ・ビュー切替
+// ============================
+function navigate(dir) {
+  if(currentView==="weekly") baseDate.setDate(baseDate.getDate()+dir*7);
+  else baseDate.setMonth(baseDate.getMonth()+dir);
+  render();
+}
+function setView(v) { currentView=v; render(); }
+
+// ============================
+// モーダル
+// ============================
+function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
+function closeModalIf(e,id) { if(e.target.id===id) closeModal(id); }
+
+// イベント登録
+function openEventModal(dateStr) {
+  defaultDateStr = dateStr;
+  document.getElementById("ev-date").value = dateStr;
+  document.getElementById("ev-title").value = "";
+  document.getElementById("ev-important").checked = false;
+  document.getElementById("ev-approx").checked = false;
+  selectRegion("japan");
+  document.getElementById("modal-event").classList.remove("hidden");
+}
+function selectRegion(r) {
+  selectedRegion = r;
+  document.getElementById("btn-region-japan").style.background = r==="japan"?"#b3e5fc":"#f5f5f5";
+  document.getElementById("btn-region-japan").style.color = r==="japan"?"#333":"#aaa";
+  document.getElementById("btn-region-overseas").style.background = r==="overseas"?"#fce4ec":"#f5f5f5";
+  document.getElementById("btn-region-overseas").style.color = r==="overseas"?"#333":"#aaa";
+}
+function saveEvent() {
+  const date = document.getElementById("ev-date").value;
+  const title = document.getElementById("ev-title").value;
+  if(!date||!title) return;
+  events.push({
+    id: Date.now(), type:"event", region:selectedRegion, date, title,
+    important: document.getElementById("ev-important").checked,
+    approximate: document.getElementById("ev-approx").checked
+  });
+  closeModal("modal-event");
+  render();
+}
+
+// 決算登録
+function openEarningsModal(dateStr) {
+  defaultDateStr = dateStr;
+  document.getElementById("er-date").value = dateStr;
+  document.getElementById("er-ticker").value = "";
+  document.getElementById("er-name").value = "";
+  document.getElementById("er-time").value = "";
+  document.getElementById("er-prev").value = "";
+  document.getElementById("er-forecast").value = "";
+  document.getElementById("er-type").value = "本決算";
+  document.getElementById("ai-note").classList.add("hidden");
+  document.getElementById("selected-stock-note").classList.add("hidden");
+  document.getElementById("ticker-suggestions").classList.add("hidden");
+  selectTrend("up");
+  document.getElementById("modal-earnings").classList.remove("hidden");
+}
+function selectTrend(t) {
+  selectedTrend = t;
+  const configs = {
+    up: { border:"#2e7d32", bg:"#e8f5e9", color:"#2e7d32" },
+    down: { border:"#c62828", bg:"#ffebee", color:"#c62828" },
+    flat: { border:"#616161", bg:"#f5f5f5", color:"#616161" },
+  };
+  ["up","down","flat"].forEach(v=>{
+    const btn = document.getElementById("trend-"+v);
+    const c = v===t ? configs[v] : {border:"#bdbdbd",bg:"#fafafa",color:"#bbb"};
+    btn.style.border = `2px solid ${c.border}`;
+    btn.style.background = c.bg;
+    btn.style.color = c.color;
+  });
+}
+async function fetchEarnings() {
+  const ticker = document.getElementById("er-ticker").value.trim();
+  if(!ticker||ticker.length<3){ showAiNote("銘柄コードを入力してください（例：7203）","err"); return; }
+  const btn = document.getElementById("ai-btn");
+  btn.disabled = true; btn.textContent = "取得中…";
+  hideAiNote();
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`日本株の銘柄コード「${ticker}」について、以下のJSONのみ返してください。マークダウン・説明文不要。\n{\n  "name": "企業名",\n  "earningsType": "本決算",\n  "time": "例：15:30〜",\n  "prevActual": "前年度純利益（例：4.9兆円、▲500億円）",\n  "forecast": "今期純利益予想（例：5.1兆円）",\n  "trend": "upまたはdownまたはflat",\n  "date": "次回決算予定日YYYY-MM-DD、不明なら空文字"\n}`}]
+      })
+    });
+    const data = await res.json();
+    const text = (data.content||[]).map(c=>c.text||"").join("");
+    const clean = text.replace(/```json|```/g,"").trim();
+    const p = JSON.parse(clean);
+    document.getElementById("er-name").value = p.name||"";
+    document.getElementById("er-type").value = p.earningsType||"本決算";
+    document.getElementById("er-time").value = p.time||"15:30〜";
+    document.getElementById("er-prev").value = p.prevActual||"";
+    document.getElementById("er-forecast").value = p.forecast||"";
+    if(p.trend) selectTrend(p.trend);
+    if(p.date && !document.getElementById("er-date").value) document.getElementById("er-date").value = p.date;
+    showAiNote("✨ AIが自動入力しました！内容を確認・修正してください。","ok");
+  } catch(e) {
+    showAiNote("⚠️ 取得に失敗しました。手動で入力してください。","err");
+  }
+  btn.disabled=false; btn.textContent="✨ AI入力";
+}
+function showAiNote(msg,cls) {
+  const el = document.getElementById("ai-note");
+  el.textContent = msg; el.className = `ai-note ${cls}`; el.classList.remove("hidden");
+}
+function hideAiNote() { document.getElementById("ai-note").classList.add("hidden"); }
+
+function openEarningsConfirm() {
+  const date = document.getElementById("er-date").value;
+  const name = document.getElementById("er-name").value;
+  if(!date||!name) return;
+  const ticker = document.getElementById("er-ticker").value;
+  const time = document.getElementById("er-time").value;
+  const earningsType = document.getElementById("er-type").value;
+  const prevActual = document.getElementById("er-prev").value;
+  const forecast = document.getElementById("er-forecast").value;
+  const a = arrowFor(selectedTrend), ac = arrowColor(selectedTrend);
+  const rows = [
+    ["銘柄", `${name}（${ticker}）`],
+    ["決算日", date],
+    ["発表時間", time],
+    ["種別", earningsType],
+    ["前年度実績", prevActual],
+    ["今年度予想", forecast],
+  ];
+  let html = rows.map(([k,v])=>`<div class="confirm-row"><div class="confirm-key">${k}</div><div class="confirm-val">${v}</div></div>`).join("");
+  html += `<div class="confirm-row"><div class="confirm-key">前年比較</div><div class="confirm-val"><span style="font-size:22px;font-weight:900;color:${ac}">${a}</span> <span style="font-size:11px;color:${ac};font-weight:700">${trendLabel(selectedTrend)}</span></div></div>`;
+  document.getElementById("confirm-content").innerHTML = html;
+  closeModal("modal-earnings");
+  document.getElementById("modal-confirm").classList.remove("hidden");
+}
+function saveEarnings() {
+  events.push({
+    id: Date.now(), type:"earnings",
+    date: document.getElementById("er-date").value,
+    ticker: document.getElementById("er-ticker").value,
+    name: document.getElementById("er-name").value,
+    time: document.getElementById("er-time").value,
+    earningsType: document.getElementById("er-type").value,
+    prevActual: document.getElementById("er-prev").value,
+    forecast: document.getElementById("er-forecast").value,
+    trend: selectedTrend,
+  });
+  closeModal("modal-confirm");
+  render();
+}
+
+// 詳細表示
+function showDetail(id) {
+  const ev = events.find(e=>e.id===id);
+  if(!ev) return;
+  let html = "";
+  if(ev.type==="earnings"){
+    const a=arrowFor(ev.trend), ac=arrowColor(ev.trend);
+    const rows=[["銘柄コード",ev.ticker],["銘柄名",ev.name],["発表時間",ev.time],["決算種別",ev.earningsType],["前年度実績",ev.prevActual],["今年度実績予想",ev.forecast]];
+    html = `<h3 class="modal-title brown" style="margin-bottom:14px">📊 決算情報</h3>`;
+    html += rows.map(([k,v])=>`<div class="detail-row"><div class="detail-key">${k}</div><div class="detail-val">${v}</div></div>`).join("");
+    html += `<div class="detail-row"><div class="detail-key">前年比較</div><div class="detail-val"><span style="font-size:22px;font-weight:900;color:${ac}">${a}</span> <span style="font-size:11px;color:${ac};font-weight:700">${trendLabel(ev.trend)}</span></div></div>`;
+  } else {
+    const isJapan = ev.region==="japan";
+    const badgeCls = isJapan?"japan":"overseas";
+    html = `<h3 class="modal-title brown" style="margin-bottom:14px">📅 イベント詳細</h3>
+      <span class="region-badge ${badgeCls}"><span style="font-size:11px">${isJapan?"🇯🇵":"🌐"}</span>${isJapan?"日本":"海外"}</span>
+      <p style="font-weight:700;font-size:15px;color:#37474f;margin:6px 0">${ev.title}</p>
+      <p style="font-size:12px;color:#90a4ae;margin:6px 0">${ev.important?"🔴 重要イベント":""}${ev.approximate?"〜 おおよその日程":""}</p>`;
+  }
+  document.getElementById("detail-content").innerHTML = html;
+  document.getElementById("modal-detail").classList.remove("hidden");
+}
+
+// ============================
+// 初期化
+// ============================
+render();
+</script>
+</body>
+</html>
