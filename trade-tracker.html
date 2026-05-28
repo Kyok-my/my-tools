@@ -1529,11 +1529,9 @@ function renderDashboard() {
   // ゲージ（月＋前半/後半を2行で表示）
   var monthLabel = (mm + 1) + '月';
   drawGauge('gauge-path-1','gauge-card-1','gauge-pct-1','gauge-amount-1','gauge-goal-1','gauge-title-1',
-    firstSum, cfg.week, monthLabel + '
-' + firstName, 'pink');
+    firstSum, cfg.week, monthLabel + ' ' + firstName, 'pink');
   drawGauge('gauge-path-2','gauge-card-2','gauge-pct-2','gauge-amount-2','gauge-goal-2','gauge-title-2',
-    secondSum, cfg.week, monthLabel + '
-' + secondName, 'purple');
+    secondSum, cfg.week, monthLabel + ' ' + secondName, 'purple');
 
   // 今月
   var mEl = document.getElementById('s-month');
