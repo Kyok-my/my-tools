@@ -488,6 +488,8 @@
     color: var(--text2);
     margin-bottom: 10px;
     letter-spacing: 0.05em;
+    white-space: pre-line;
+    line-height: 1.5;
   }
 
   .gauge-svg-wrap {
@@ -664,6 +666,192 @@
     text-align: right;
     font-weight: 500;
   }
+
+  /* 編集モード */
+  .btn-edit {
+    background: none;
+    border: 1.5px solid var(--pink2);
+    border-radius: 8px;
+    color: var(--pink1);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 3px 9px;
+    transition: all 0.15s;
+    margin-right: 3px;
+  }
+  .btn-edit:hover { background: var(--pink4); }
+
+  .edit-row td {
+    padding: 6px 4px !important;
+    background: var(--pink5) !important;
+  }
+
+  .edit-input {
+    width: 100%;
+    padding: 5px 7px;
+    border: 1.5px solid var(--pink2);
+    border-radius: 8px;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    background: white;
+    color: var(--text);
+    outline: none;
+    min-width: 60px;
+  }
+
+  .edit-select {
+    padding: 5px 4px;
+    border: 1.5px solid var(--pink2);
+    border-radius: 8px;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 12px;
+    background: white;
+    color: var(--text);
+    outline: none;
+  }
+
+  .btn-save-edit {
+    background: linear-gradient(135deg, var(--pink2), var(--pink1));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 10px;
+    margin-right: 3px;
+    transition: all 0.15s;
+  }
+  .btn-save-edit:hover { opacity: 0.85; }
+
+  .btn-cancel-edit {
+    background: none;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    color: var(--text3);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 10px;
+    transition: all 0.15s;
+  }
+  .btn-cancel-edit:hover { border-color: var(--text3); }
+
+  /* 持ち越しモーダル */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(80,40,60,0.35);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal-sheet {
+    background: var(--white);
+    border-radius: 24px 24px 0 0;
+    padding: 20px 16px 36px;
+    width: 100%;
+    max-width: 860px;
+    max-height: 75vh;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+    box-shadow: 0 -4px 30px rgba(200,120,150,0.18);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px dotted var(--pink3);
+  }
+
+  .modal-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--rose);
+  }
+
+  .btn-modal-close {
+    background: var(--pink3);
+    border: none;
+    border-radius: 99px;
+    color: var(--rose);
+    font-size: 13px;
+    font-weight: 800;
+    padding: 5px 14px;
+    cursor: pointer;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+  }
+
+  /* 月次レポート表 */
+  .report-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    font-size: 12px;
+  }
+
+  .report-table thead th {
+    background: var(--pink3);
+    color: var(--rose);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 8px 6px;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  .report-table thead th:first-child { border-radius: 10px 0 0 10px; }
+  .report-table thead th:last-child  { border-radius: 0 10px 10px 0; }
+
+  .report-table tbody tr { background: var(--white); }
+  .report-table tbody tr:nth-child(even) { background: var(--pink5); }
+
+  .report-table tbody td {
+    padding: 9px 6px;
+    text-align: center;
+    border-top: 1px solid var(--pink4);
+    border-bottom: 1px solid var(--pink4);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .report-table tbody td:first-child { border-left: 1px solid var(--pink4); border-radius: 10px 0 0 10px; font-weight: 800; color: var(--text2); }
+  .report-table tbody td:last-child  { border-right: 1px solid var(--pink4); border-radius: 0 10px 10px 0; }
+
+  .up   { color: var(--plus); font-weight: 800; }
+  .down { color: var(--minus); font-weight: 800; }
+  .neu  { color: var(--text3); }
+
+  /* 持ち越しカードのクリック可能スタイル */
+  .carry-clickable {
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .carry-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow);
+  }
+  .carry-clickable:hover .summary-label::after {
+    content: ' （タップで確認）';
+    font-size: 10px;
+    color: var(--pink1);
+  }
 </style>
 </head>
 <body>
@@ -750,7 +938,7 @@
     </div>
 
     <div class="summary-grid">
-      <div class="summary-item">
+      <div class="summary-item carry-clickable" onclick="openCarryModal()">
         <div class="summary-label">🔄 持ち越し中</div>
         <div class="summary-value" id="s-carry">— 件</div>
       </div>
@@ -763,6 +951,26 @@
     <div class="card">
       <div class="card-title"><div class="icon">📆</div>月次推移</div>
       <div id="monthly-list"><div class="empty">まだデータがありません🌸<br>入力タブから記録してみよう！</div></div>
+    </div>
+
+    <!-- 月次レポート -->
+    <div class="card">
+      <div class="card-title"><div class="icon">📊</div>月次レポート（前半・後半・前月比）</div>
+      <div style="overflow-x:auto">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>月</th>
+              <th>前半</th>
+              <th>後半</th>
+              <th>合計</th>
+              <th>前月比</th>
+            </tr>
+          </thead>
+          <tbody id="report-list"></tbody>
+        </table>
+        <div id="report-empty" class="empty">まだデータがありません🌸</div>
+      </div>
     </div>
 
     <!-- 生涯目標カード -->
@@ -800,7 +1008,7 @@
           <label>🏦 口座</label>
           <select id="account">
             <option value="NISA">🌿 NISA（非課税）</option>
-            <option value="特定">📄 特定（課税20%）</option>
+            <option value="特定" selected>📄 特定（課税20%）</option>
           </select>
         </div>
         <div class="form-group full">
@@ -908,9 +1116,9 @@
 
 <script>
 let trades = [];
-let cfg = { seed: 900000, week: 0, month: 0, periodMode: 'week', periodStart: 1, periodName: '前半', dream: 0 };
+let cfg = { seed: 900000, week: 0, month: 0, periodMode: 'week', periodStart: 16, periodName: '後半', dream: 0 };
 
-// ── データ読み込み ──────────────────────
+// ── データ読み込み ──
 function load() {
   try { trades = JSON.parse(localStorage.getItem('trades_v2')) || []; } catch(e){ trades=[]; }
   try {
@@ -921,10 +1129,9 @@ function load() {
   document.getElementById('cfg-week').value         = cfg.week        || '';
   document.getElementById('cfg-month').value        = cfg.month       || '';
   document.getElementById('cfg-period-mode').value  = cfg.periodMode  || 'week';
-  document.getElementById('cfg-period-start').value = cfg.periodStart || 1;
-  document.getElementById('cfg-period-name').value  = cfg.periodName  || '前半';
+  document.getElementById('cfg-period-start').value = cfg.periodStart || 16;
+  document.getElementById('cfg-period-name').value  = cfg.periodName  || '後半';
   document.getElementById('cfg-dream').value        = cfg.dream       || '';
-  // メモ読み込み
   const savedMemo = localStorage.getItem('free_memo') || '';
   const savedAt   = localStorage.getItem('free_memo_at') || '';
   document.getElementById('free-memo').value = savedMemo;
@@ -939,62 +1146,35 @@ function saveSettings() {
   cfg.week        = parseFloat(document.getElementById('cfg-week').value)         || 0;
   cfg.month       = parseFloat(document.getElementById('cfg-month').value)        || 0;
   cfg.periodMode  = document.getElementById('cfg-period-mode').value;
-  cfg.periodStart = parseInt(document.getElementById('cfg-period-start').value)   || 1;
-  cfg.periodName  = document.getElementById('cfg-period-name').value.trim()       || '前半';
-  cfg.dream       = parseFloat(document.getElementById('cfg-dream').value)         || 0;
+  cfg.periodStart = parseInt(document.getElementById('cfg-period-start').value)   || 16;
+  cfg.periodName  = document.getElementById('cfg-period-name').value.trim()       || '後半';
+  cfg.dream       = parseFloat(document.getElementById('cfg-dream').value)        || 0;
   localStorage.setItem('cfg_v2', JSON.stringify(cfg));
   renderDashboard();
-  alert('設定を保存しました 🌸');
+  alert('設定を保存しました');
 }
 
-// 期間モード切替で追加設定を表示/非表示
 function togglePeriodSettings() {
   const mode = document.getElementById('cfg-period-mode').value;
   document.getElementById('custom-period-settings').style.display = mode === 'custom' ? 'block' : 'none';
 }
 
-// ── 期間範囲を取得 ──────────────────────
-function getPeriodRange() {
-  const now = new Date();
-  const yyyy = now.getFullYear();
-  const mm   = now.getMonth();
-  const dd   = now.getDate();
-
-  if (cfg.periodMode === 'week') {
-    // 月〜金（平日）
-    const day = now.getDay(); // 0=日,1=月...5=金,6=土
-    // 今週の月曜を求める（日曜は前週の月曜から6日後を今週とする）
-    const mon = new Date(now);
-    if (day === 0) {
-      mon.setDate(dd - 6); // 日曜→前週月曜
-    } else {
-      mon.setDate(dd - (day - 1));
-    }
-    const fri = new Date(mon);
-    fri.setDate(mon.getDate() + 4); // 月+4=金
-    return [mon.toISOString().slice(0,10), fri.toISOString().slice(0,10), '今週（月〜金）'];
-  } else {
-    // カスタム：periodStart日を区切りに前半/後半
-    const start = cfg.periodStart || 1;
-    let pStart, pEnd, pName;
-    if (dd >= start) {
-      pStart = new Date(yyyy, mm, start);
-      pEnd   = new Date(yyyy, mm + 1, 0);
-      pName  = cfg.periodName || '後半';
-    } else {
-      pStart = new Date(yyyy, mm - 1, start);
-      pEnd   = new Date(yyyy, mm, start - 1);
-      pName  = '前半';
-    }
-    return [
-      pStart.toISOString().slice(0,10),
-      pEnd.toISOString().slice(0,10),
-      pName
-    ];
-  }
+// ── 計算 ──
+function calcProfit(t) {
+  if (t.sell === null || t.sell === undefined) return null;
+  return (t.sell - t.buy) * t.qty;
+}
+function calcAfter(t) {
+  const p = calcProfit(t);
+  if (p === null) return null;
+  return t.account === '特定' ? Math.floor(p * 0.8) : p;
+}
+function fmtNum(n) {
+  if (n === null || n === undefined) return '—';
+  return (n >= 0 ? '+' : '') + n.toLocaleString() + '円';
 }
 
-// ── 取引追加 ──────────────────────────
+// ── 取引追加 ──
 function addTrade() {
   const dateVal  = document.getElementById('date').value;
   const stockVal = document.getElementById('stock').value.trim();
@@ -1009,9 +1189,7 @@ function addTrade() {
     return;
   }
 
-  // IDは連番で管理（削除バグ防止）
-  const newId = trades.length > 0 ? Math.max(...trades.map(t => t.id)) + 1 : 1;
-
+  const newId = trades.length > 0 ? Math.max.apply(null, trades.map(function(t){ return t.id; })) + 1 : 1;
   trades.push({
     id: newId,
     date: dateVal,
@@ -1025,106 +1203,252 @@ function addTrade() {
 
   saveTrades();
   renderAll();
-  ['stock','buy','sell','qty','memo'].forEach(id => document.getElementById(id).value = '');
+  ['stock','buy','sell','qty','memo'].forEach(function(id){ document.getElementById(id).value = ''; });
   switchTab('list');
 }
 
-// ── 削除（data属性経由で安全に取得）──
+// ── 削除 ──
 function deleteTrade(id) {
   if (!confirm('このデータを削除しますか？')) return;
   const numId = Number(id);
-  trades = trades.filter(t => t.id !== numId);
+  trades = trades.filter(function(t){ return t.id !== numId; });
   saveTrades();
   renderAll();
 }
 
 function clearAll() {
-  if (!confirm('すべてのデータを削除します。この操作は元に戻せません。')) return;
+  if (!confirm('すべてのデータを削除します。元に戻せません。')) return;
   trades = [];
   saveTrades();
   renderAll();
 }
 
-// ── 計算 ──────────────────────────────
-function calcProfit(t) {
-  if (t.sell === null || t.sell === undefined) return null;
-  return (t.sell - t.buy) * t.qty;
-}
-
-function calcAfter(t) {
-  const p = calcProfit(t);
-  if (p === null) return null;
-  return t.account === '特定' ? Math.floor(p * 0.8) : p;
-}
-
-function fmtNum(n) {
-  if (n === null || n === undefined) return '—';
-  return (n >= 0 ? '+' : '') + n.toLocaleString() + '円';
-}
-
-// ── レンダリング ──────────────────────
-function renderAll() { renderList(); renderDashboard(); }
-
+// ── 一覧レンダリング ──
 function renderList() {
-  const sorted = [...trades].sort((a,b) => new Date(a.date)-new Date(b.date));
-  const tbody  = document.getElementById('list');
-  const empty  = document.getElementById('list-empty');
+  var sorted = trades.slice().sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
+  var tbody  = document.getElementById('list');
+  var empty  = document.getElementById('list-empty');
 
   if (sorted.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
   empty.style.display = 'none';
 
-  tbody.innerHTML = sorted.map(t => {
-    const profit = calcProfit(t);
-    const after  = calcAfter(t);
-    const pClass = profit === null ? '' : profit >= 0 ? 'profit-plus' : 'profit-minus';
-    const profitTxt = profit === null
+  var html = '';
+  sorted.forEach(function(t) {
+    var profit  = calcProfit(t);
+    var after   = calcAfter(t);
+    var pClass  = profit === null ? '' : (profit >= 0 ? 'profit-plus' : 'profit-minus');
+    var profitTxt = profit === null
       ? '<span class="carry-badge">持越中</span>'
-      : `<span class="${pClass}">${fmtNum(profit)}</span>`;
-    const afterTxt = after === null ? '—' : `<span class="${pClass}">${fmtNum(after)}</span>`;
-    const badge = t.account === 'NISA'
+      : '<span class="' + pClass + '">' + fmtNum(profit) + '</span>';
+    var afterTxt = after === null ? '—' : '<span class="' + pClass + '">' + fmtNum(after) + '</span>';
+    var badge = t.account === 'NISA'
       ? '<span class="badge badge-nisa">NISA</span>'
       : '<span class="badge badge-toku">特定</span>';
+    var memoHtml = t.memo ? '<br><span style="font-size:11px;color:var(--text3);font-weight:400">' + t.memo + '</span>' : '';
 
-    // data属性でIDを渡す（削除バグ修正）
-    return `<tr>
-      <td style="font-size:12px;color:var(--text2)">${t.date}</td>
-      <td style="text-align:left;font-weight:700">${t.stock}${t.memo ? `<br><span style="font-size:11px;color:var(--text3);font-weight:400">${t.memo}</span>` : ''}</td>
-      <td>${badge}</td>
-      <td style="color:var(--text2)">${t.buy.toLocaleString()}</td>
-      <td style="color:var(--text2)">${t.sell !== null ? t.sell.toLocaleString() : '—'}</td>
-      <td>${profitTxt}</td>
-      <td>${afterTxt}</td>
-      <td><button class="btn-del" data-id="${t.id}" onclick="deleteTrade(this.dataset.id)">削除</button></td>
-    </tr>`;
-  }).join('');
+    html += '<tr id="row-' + t.id + '">';
+    html += '<td style="font-size:12px;color:var(--text2)">' + t.date + '</td>';
+    html += '<td style="text-align:left;font-weight:700">' + t.stock + memoHtml + '</td>';
+    html += '<td>' + badge + '</td>';
+    html += '<td style="color:var(--text2)">' + t.buy.toLocaleString() + '</td>';
+    html += '<td style="color:var(--text2)">' + (t.sell !== null ? t.sell.toLocaleString() : '—') + '</td>';
+    html += '<td>' + profitTxt + '</td>';
+    html += '<td>' + afterTxt + '</td>';
+    html += '<td>';
+    html += '<button class="btn-edit" data-id="' + t.id + '" onclick="startEdit(this.dataset.id)">編集</button>';
+    html += '<button class="btn-del" data-id="' + t.id + '" onclick="deleteTrade(this.dataset.id)">削除</button>';
+    html += '</td></tr>';
+  });
+  tbody.innerHTML = html;
 }
 
-// ── ゲージ描画 ──────────────────────────
+// ── 編集 ──
+function startEdit(id) {
+  var numId = Number(id);
+  var t = trades.find(function(x){ return x.id === numId; });
+  if (!t) return;
+
+  var sellVal = t.sell !== null ? t.sell : '';
+  var nisaSel = t.account === 'NISA' ? 'selected' : '';
+  var tokuSel = t.account === '特定' ? 'selected' : '';
+
+  var row = document.getElementById('row-' + numId);
+  row.classList.add('edit-row');
+  var html = '';
+  html += '<td><input class="edit-input" id="e-date-' + numId + '" type="date" value="' + t.date + '" style="min-width:110px"></td>';
+  html += '<td>';
+  html += '<input class="edit-input" id="e-stock-' + numId + '" type="text" value="' + t.stock + '" placeholder="銘柄" style="min-width:70px">';
+  html += '<input class="edit-input" id="e-memo-' + numId + '" type="text" value="' + (t.memo || '') + '" placeholder="メモ" style="min-width:70px;margin-top:3px">';
+  html += '</td>';
+  html += '<td><select class="edit-select" id="e-acc-' + numId + '">';
+  html += '<option value="NISA" ' + nisaSel + '>NISA</option>';
+  html += '<option value="特定" ' + tokuSel + '>特定</option>';
+  html += '</select></td>';
+  html += '<td><input class="edit-input" id="e-buy-' + numId + '" type="number" value="' + t.buy + '" style="min-width:70px"></td>';
+  html += '<td><input class="edit-input" id="e-sell-' + numId + '" type="number" value="' + sellVal + '" placeholder="空欄=持越" style="min-width:70px"></td>';
+  html += '<td colspan="2" style="text-align:center;color:var(--text3);font-size:12px">保存後に再計算</td>';
+  html += '<td>';
+  html += '<button class="btn-save-edit" data-id="' + numId + '" onclick="saveEdit(this.dataset.id)">保存</button>';
+  html += '<button class="btn-cancel-edit" onclick="renderList()">戻す</button>';
+  html += '</td>';
+  row.innerHTML = html;
+}
+
+function saveEdit(id) {
+  var numId = Number(id);
+  var idx = trades.findIndex(function(x){ return x.id === numId; });
+  if (idx === -1) return;
+
+  var dateVal  = document.getElementById('e-date-'  + numId).value;
+  var stockVal = document.getElementById('e-stock-' + numId).value.trim();
+  var memoVal  = document.getElementById('e-memo-'  + numId).value.trim();
+  var accVal   = document.getElementById('e-acc-'   + numId).value;
+  var buyVal   = parseFloat(document.getElementById('e-buy-'  + numId).value);
+  var sellRaw  = document.getElementById('e-sell-'  + numId).value;
+
+  if (!dateVal || !stockVal || isNaN(buyVal)) {
+    alert('日付・銘柄・買値は必須です');
+    return;
+  }
+
+  trades[idx] = Object.assign({}, trades[idx], {
+    date: dateVal, stock: stockVal, memo: memoVal,
+    account: accVal, buy: buyVal,
+    sell: sellRaw === '' ? null : parseFloat(sellRaw)
+  });
+  saveTrades();
+  renderAll();
+}
+
+// ── 持ち越しモーダル ──
+function openCarryModal() {
+  var carries = trades.filter(function(t){ return t.sell === null || t.sell === undefined; });
+  var list = document.getElementById('carry-list');
+
+  if (carries.length === 0) {
+    list.innerHTML = '<div class="empty">持ち越し中の取引はありません</div>';
+  } else {
+    var html = '';
+    carries.forEach(function(t) {
+      html += '<div style="background:var(--pink5);border-radius:14px;padding:12px 14px;margin-bottom:10px;border:1.5px solid var(--pink3)" id="carry-item-' + t.id + '">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+      html += '<div><span style="font-weight:800;font-size:15px;color:var(--text)">' + t.stock + '</span>';
+      html += '<span style="margin-left:8px;font-size:12px;color:var(--text3)">' + t.date + '</span></div>';
+      html += '<span class="carry-badge">持越中</span></div>';
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:var(--text2);margin-bottom:10px">';
+      html += '<div>買値：<strong>' + t.buy.toLocaleString() + '円</strong></div>';
+      html += '<div>株数：<strong>' + t.qty + '株</strong></div>';
+      html += '<div>口座：<strong>' + t.account + '</strong></div>';
+      html += '<div>メモ：<strong>' + (t.memo || '—') + '</strong></div></div>';
+      html += '<div id="carry-edit-area-' + t.id + '">';
+      html += '<button class="btn-edit" style="width:100%;padding:8px" data-id="' + t.id + '" onclick="startCarryEdit(this.dataset.id)">編集・売値を入力する</button>';
+      html += '</div></div>';
+    });
+    list.innerHTML = html;
+  }
+
+  document.getElementById('carry-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCarryModal(e) {
+  if (e && e.target !== document.getElementById('carry-modal')) return;
+  document.getElementById('carry-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function startCarryEdit(id) {
+  var numId = Number(id);
+  var t = trades.find(function(x){ return x.id === numId; });
+  if (!t) return;
+
+  var nisaSel = t.account === 'NISA' ? 'selected' : '';
+  var tokuSel = t.account === '特定' ? 'selected' : '';
+
+  var area = document.getElementById('carry-edit-area-' + numId);
+  var html = '';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">';
+  html += '<div><div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:3px">日付</div>';
+  html += '<input class="edit-input" id="ce-date-' + numId + '" type="date" value="' + t.date + '"></div>';
+  html += '<div><div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:3px">銘柄</div>';
+  html += '<input class="edit-input" id="ce-stock-' + numId + '" type="text" value="' + t.stock + '"></div>';
+  html += '<div><div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:3px">買値（円）</div>';
+  html += '<input class="edit-input" id="ce-buy-' + numId + '" type="number" value="' + t.buy + '"></div>';
+  html += '<div><div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:3px">売値（空欄=持越継続）</div>';
+  html += '<input class="edit-input" id="ce-sell-' + numId + '" type="number" placeholder="売値を入力"></div>';
+  html += '<div><div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:3px">株数</div>';
+  html += '<input class="edit-input" id="ce-qty-' + numId + '" type="number" value="' + t.qty + '"></div>';
+  html += '<div><div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:3px">口座</div>';
+  html += '<select class="edit-select" id="ce-acc-' + numId + '" style="width:100%">';
+  html += '<option value="NISA" ' + nisaSel + '>NISA</option>';
+  html += '<option value="特定" ' + tokuSel + '>特定</option>';
+  html += '</select></div></div>';
+  html += '<div style="margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:3px">メモ</div>';
+  html += '<input class="edit-input" id="ce-memo-' + numId + '" type="text" value="' + (t.memo || '') + '" placeholder="メモ（任意）"></div>';
+  html += '<div style="display:flex;gap:8px">';
+  html += '<button class="btn-save-edit" style="flex:1;padding:10px" data-id="' + numId + '" onclick="saveCarryEdit(this.dataset.id)">保存する</button>';
+  html += '<button class="btn-cancel-edit" style="padding:10px 16px" onclick="openCarryModal()">戻す</button>';
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function saveCarryEdit(id) {
+  var numId = Number(id);
+  var idx = trades.findIndex(function(x){ return x.id === numId; });
+  if (idx === -1) return;
+
+  var dateVal  = document.getElementById('ce-date-'  + numId).value;
+  var stockVal = document.getElementById('ce-stock-' + numId).value.trim();
+  var buyVal   = parseFloat(document.getElementById('ce-buy-'  + numId).value);
+  var sellRaw  = document.getElementById('ce-sell-'  + numId).value;
+  var qtyVal   = parseFloat(document.getElementById('ce-qty-'  + numId).value);
+  var accVal   = document.getElementById('ce-acc-'   + numId).value;
+  var memoVal  = document.getElementById('ce-memo-'  + numId).value.trim();
+
+  if (!dateVal || !stockVal || isNaN(buyVal) || isNaN(qtyVal)) {
+    alert('日付・銘柄・買値・株数は必須です');
+    return;
+  }
+
+  trades[idx] = Object.assign({}, trades[idx], {
+    date: dateVal, stock: stockVal, buy: buyVal,
+    sell: sellRaw === '' ? null : parseFloat(sellRaw),
+    qty: qtyVal, account: accVal, memo: memoVal
+  });
+
+  saveTrades();
+  renderAll();
+  closeCarryModal(null);
+  if (sellRaw !== '') {
+    setTimeout(function(){ alert('売買確定しました！一覧で確認してね'); }, 200);
+  }
+}
+
+// ── ゲージ描画 ──
 function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, val, goal, title, colorClass) {
-  const TOTAL = 157; // 半円の弧長
+  var TOTAL = 157;
   document.getElementById(titleId).textContent = title;
 
-  const pctEl = document.getElementById(pctId);
-  const amEl  = document.getElementById(amountId);
-  const goalEl = document.getElementById(goalId);
-  const path  = document.getElementById(pathId);
-  const card  = document.getElementById(cardId);
+  var pctEl  = document.getElementById(pctId);
+  var amEl   = document.getElementById(amountId);
+  var goalEl = document.getElementById(goalId);
+  var path   = document.getElementById(pathId);
+  var card   = document.getElementById(cardId);
 
   if (goal <= 0) {
-    // 目標未設定
     path.setAttribute('stroke-dasharray', '0 ' + TOTAL);
-    pctEl.textContent = '—';
-    pctEl.className = 'gauge-pct ' + colorClass;
-    amEl.textContent = val !== 0 ? fmtNum(val) : '—';
+    pctEl.textContent  = '—';
+    pctEl.className    = 'gauge-pct ' + colorClass;
+    amEl.textContent   = val !== 0 ? fmtNum(val) : '—';
     goalEl.textContent = '目標を設定してね';
     card.classList.remove('over');
     return;
   }
 
-  const rawPct = Math.round(val / goal * 100);
-  const clampedPct = Math.min(Math.max(rawPct, 0), 100);
-  const dashLen = TOTAL * clampedPct / 100;
-  const isOver = rawPct >= 100;
+  var rawPct     = Math.round(val / goal * 100);
+  var clampedPct = Math.min(Math.max(rawPct, 0), 100);
+  var dashLen    = TOTAL * clampedPct / 100;
+  var isOver     = rawPct >= 100;
 
   path.setAttribute('stroke-dasharray', dashLen + ' ' + TOTAL);
 
@@ -1139,32 +1463,30 @@ function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, val, goal, 
     if (colorClass === 'purple') path.setAttribute('stroke', '#c8b0e8');
   }
 
-  pctEl.textContent = rawPct + '%';
-  amEl.textContent  = fmtNum(val);
+  pctEl.textContent  = rawPct + '%';
+  amEl.textContent   = fmtNum(val);
   goalEl.textContent = '目標 ' + goal.toLocaleString() + '円';
 }
 
+// ── ダッシュボード ──
 function renderDashboard() {
-  const now = new Date();
-  const thisMonth = now.toISOString().slice(0,7);
-  const thisYear  = now.toISOString().slice(0,4);
+  var now       = new Date();
+  var thisMonth = now.toISOString().slice(0,7);
+  var thisYear  = now.toISOString().slice(0,4);
+  var yyyy      = now.getFullYear();
+  var mm        = now.getMonth();
+  var dd        = now.getDate();
+  var start     = cfg.periodStart || 16;
 
-  // 前半・後半の期間を計算
-  const mm   = now.getMonth();
-  const yyyy = now.getFullYear();
-  const dd   = now.getDate();
-  const start = cfg.periodStart || 16;
-
-  let firstStart, firstEnd, secondStart, secondEnd, firstName, secondName;
+  var firstStart, firstEnd, secondStart, secondEnd, firstName, secondName;
 
   if (cfg.periodMode === 'week') {
-    // 月〜金モード：今週と先週を前半・後半として表示
-    const day = now.getDay();
-    const thisMon = new Date(now);
+    var day = now.getDay();
+    var thisMon = new Date(now);
     thisMon.setDate(dd - (day === 0 ? 6 : day - 1));
-    const thisFri = new Date(thisMon); thisFri.setDate(thisMon.getDate() + 4);
-    const lastMon = new Date(thisMon); lastMon.setDate(thisMon.getDate() - 7);
-    const lastFri = new Date(lastMon); lastFri.setDate(lastMon.getDate() + 4);
+    var thisFri = new Date(thisMon); thisFri.setDate(thisMon.getDate() + 4);
+    var lastMon = new Date(thisMon); lastMon.setDate(thisMon.getDate() - 7);
+    var lastFri = new Date(lastMon); lastFri.setDate(lastMon.getDate() + 4);
     firstStart  = lastMon.toISOString().slice(0,10);
     firstEnd    = lastFri.toISOString().slice(0,10);
     secondStart = thisMon.toISOString().slice(0,10);
@@ -1172,33 +1494,23 @@ function renderDashboard() {
     firstName   = '先週（月〜金）';
     secondName  = '今週（月〜金）';
   } else {
-    // カスタム日付区切り
-    if (dd >= start) {
-      // 今は後半 → 前半：今月1日〜start-1日、後半：今月start日〜月末
-      firstStart  = new Date(yyyy, mm, 1).toISOString().slice(0,10);
-      firstEnd    = new Date(yyyy, mm, start - 1).toISOString().slice(0,10);
-      secondStart = new Date(yyyy, mm, start).toISOString().slice(0,10);
-      secondEnd   = new Date(yyyy, mm + 1, 0).toISOString().slice(0,10);
-    } else {
-      // 今は前半 → 先月の後半・今月の前半
-      firstStart  = new Date(yyyy, mm - 1, start).toISOString().slice(0,10);
-      firstEnd    = new Date(yyyy, mm, 0).toISOString().slice(0,10);
-      secondStart = new Date(yyyy, mm, 1).toISOString().slice(0,10);
-      secondEnd   = new Date(yyyy, mm, start - 1).toISOString().slice(0,10);
-    }
-    firstName  = '前半（1〜' + (start-1) + '日）';
-    secondName = (cfg.periodName || '後半') + '（' + start + '日〜月末）';
+    firstStart  = new Date(yyyy, mm, 1).toISOString().slice(0,10);
+    firstEnd    = new Date(yyyy, mm, start - 1).toISOString().slice(0,10);
+    secondStart = new Date(yyyy, mm, start).toISOString().slice(0,10);
+    secondEnd   = new Date(yyyy, mm + 1, 0).toISOString().slice(0,10);
+    firstName   = '前半（1〜' + (start - 1) + '日）';
+    secondName  = (cfg.periodName || '後半') + '（' + start + '日〜月末）';
   }
 
-  let firstSum=0, secondSum=0, monthSum=0, yearSum=0, totalAfter=0, carryCount=0;
-  let monthWin=0, monthTotal=0;
+  var firstSum=0, secondSum=0, monthSum=0, yearSum=0, totalAfter=0, carryCount=0;
+  var monthWin=0, monthTotal=0;
 
-  trades.forEach(t => {
-    const after = calcAfter(t);
+  trades.forEach(function(t) {
+    var after = calcAfter(t);
     if (after === null) { carryCount++; return; }
     totalAfter += after;
-    if (t.date >= firstStart  && t.date <= firstEnd)   firstSum  += after;
-    if (t.date >= secondStart && t.date <= secondEnd)  secondSum += after;
+    if (t.date >= firstStart  && t.date <= firstEnd)  firstSum  += after;
+    if (t.date >= secondStart && t.date <= secondEnd) secondSum += after;
     if (t.date.slice(0,7) === thisMonth) {
       monthSum += after;
       monthTotal++;
@@ -1208,106 +1520,166 @@ function renderDashboard() {
   });
 
   // 資産・増減
-  const asset = cfg.seed + totalAfter;
+  var asset = cfg.seed + totalAfter;
   document.getElementById('s-asset').textContent = '¥' + asset.toLocaleString();
-  const gEl = document.getElementById('s-growth');
+  var gEl = document.getElementById('s-growth');
   gEl.textContent = fmtNum(totalAfter) + (cfg.seed ? '（' + (totalAfter/cfg.seed*100).toFixed(1) + '%）' : '');
   gEl.className = 'summary-value ' + (totalAfter >= 0 ? 'plus' : 'minus');
 
-  // ゲージ描画
+  // ゲージ（月＋前半/後半を2行で表示）
+  var monthLabel = (mm + 1) + '月';
   drawGauge('gauge-path-1','gauge-card-1','gauge-pct-1','gauge-amount-1','gauge-goal-1','gauge-title-1',
-    firstSum, cfg.week, firstName, 'pink');
+    firstSum, cfg.week, monthLabel + '
+' + firstName, 'pink');
   drawGauge('gauge-path-2','gauge-card-2','gauge-pct-2','gauge-amount-2','gauge-goal-2','gauge-title-2',
-    secondSum, cfg.week, secondName, 'purple');
+    secondSum, cfg.week, monthLabel + '
+' + secondName, 'purple');
 
   // 今月
-  const mEl = document.getElementById('s-month');
+  var mEl = document.getElementById('s-month');
   mEl.textContent = fmtNum(monthSum);
   mEl.className = 'summary-value ' + (monthSum >= 0 ? 'plus' : 'minus');
   if (cfg.month > 0) {
-    const pct = Math.round(monthSum / cfg.month * 100);
-    const bar = document.getElementById('bar-month');
-    bar.style.width = Math.min(Math.max(pct,0),100) + '%';
-    bar.className = 'goal-bar-fill' + (pct >= 100 ? ' over' : '');
-    document.getElementById('pct-month').textContent = '目標達成率 ' + pct + '%';
+    var mPct = Math.round(monthSum / cfg.month * 100);
+    var bar  = document.getElementById('bar-month');
+    bar.style.width = Math.min(Math.max(mPct,0),100) + '%';
+    bar.className = 'goal-bar-fill' + (mPct >= 100 ? ' over' : '');
+    document.getElementById('pct-month').textContent = '目標達成率 ' + mPct + '%';
   }
 
-  // 年間
-  const yEl = document.getElementById('s-year');
+  // 年間・持越・勝率
+  var yEl = document.getElementById('s-year');
   yEl.textContent = fmtNum(yearSum);
   yEl.className = 'summary-value ' + (yearSum >= 0 ? 'plus' : 'minus');
-
-  // 持越・勝率
   document.getElementById('s-carry').textContent = carryCount + ' 件';
-  document.getElementById('s-winrate').textContent =
-    monthTotal > 0 ? Math.round(monthWin/monthTotal*100) + '%' : '—';
+  document.getElementById('s-winrate').textContent = monthTotal > 0 ? Math.round(monthWin/monthTotal*100) + '%' : '—';
 
   // 月次推移
-  const monthly = {};
-  trades.forEach(t => {
-    const after = calcAfter(t);
+  var monthly = {};
+  trades.forEach(function(t) {
+    var after = calcAfter(t);
     if (after === null) return;
-    const m = t.date.slice(0,7);
+    var m = t.date.slice(0,7);
     monthly[m] = (monthly[m] || 0) + after;
   });
-  const months = Object.keys(monthly).sort().reverse();
-  document.getElementById('monthly-list').innerHTML = months.length === 0
-    ? '<div class="empty">まだデータがありません🌸<br>入力タブから記録してみよう！</div>'
-    : months.map(m => {
-        const v = monthly[m];
-        return `<div class="month-row">
-          <span class="month-label">🗓 ${m}</span>
-          <span class="${v >= 0 ? 'profit-plus' : 'profit-minus'}" style="font-size:15px;font-weight:800">${fmtNum(v)}</span>
-        </div>`;
+  var months = Object.keys(monthly).sort().reverse();
+  var mlHtml = months.length === 0
+    ? '<div class="empty">まだデータがありません</div>'
+    : months.map(function(m) {
+        var v = monthly[m];
+        return '<div class="month-row"><span class="month-label">' + m + '</span>'
+          + '<span class="' + (v >= 0 ? 'profit-plus' : 'profit-minus') + '" style="font-size:15px;font-weight:800">' + fmtNum(v) + '</span></div>';
       }).join('');
+  document.getElementById('monthly-list').innerHTML = mlHtml;
+
+  // 月次レポート（前半・後半・合計・前月比）
+  var reportData = {};
+  trades.forEach(function(t) {
+    var after = calcAfter(t);
+    if (after === null) return;
+    var m = t.date.slice(0,7);
+    var d = parseInt(t.date.slice(8,10));
+    if (!reportData[m]) reportData[m] = { first: 0, second: 0 };
+    if (d < start) reportData[m].first += after;
+    else           reportData[m].second += after;
+  });
+  var reportMonths = Object.keys(reportData).sort().reverse();
+  var reportTbody  = document.getElementById('report-list');
+  var reportEmpty  = document.getElementById('report-empty');
+  if (reportMonths.length === 0) {
+    reportTbody.innerHTML = '';
+    reportEmpty.style.display = 'block';
+  } else {
+    reportEmpty.style.display = 'none';
+    reportTbody.innerHTML = reportMonths.map(function(m, i) {
+      var d     = reportData[m];
+      var total = d.first + d.second;
+      var prevM = reportMonths[i + 1];
+      var momTxt = '—';
+      var momCls = 'neu';
+      if (prevM) {
+        var prevTotal = reportData[prevM].first + reportData[prevM].second;
+        var diff = total - prevTotal;
+        momTxt = (diff >= 0 ? '+' : '') + diff.toLocaleString() + '円';
+        momCls = diff > 0 ? 'up' : (diff < 0 ? 'down' : 'neu');
+      }
+      var fCls = d.first  >= 0 ? 'up' : 'down';
+      var sCls = d.second >= 0 ? 'up' : 'down';
+      var tCls = total    >= 0 ? 'up' : 'down';
+      return '<tr>'
+        + '<td>' + m + '</td>'
+        + '<td class="' + fCls + '">' + (d.first  >= 0 ? '+' : '') + d.first.toLocaleString()  + '</td>'
+        + '<td class="' + sCls + '">' + (d.second >= 0 ? '+' : '') + d.second.toLocaleString() + '</td>'
+        + '<td class="' + tCls + '">' + (total    >= 0 ? '+' : '') + total.toLocaleString()    + '</td>'
+        + '<td class="' + momCls + '">' + momTxt + '</td>'
+        + '</tr>';
+    }).join('');
+  }
 
   // 生涯目標
-  const dream = cfg.dream || 0;
-  const dreamEl = document.getElementById('dream-amount');
-  const dreamBar = document.getElementById('dream-bar');
-  const dreamProg = document.getElementById('dream-progress');
-  const dreamSub  = document.getElementById('dream-sub');
-
+  var dream   = cfg.dream || 0;
+  var dreamEl = document.getElementById('dream-amount');
+  var dreamBar  = document.getElementById('dream-bar');
+  var dreamProg = document.getElementById('dream-progress');
+  var dreamSub  = document.getElementById('dream-sub');
   if (dream > 0) {
-    const pct = Math.min((totalAfter / dream * 100), 100);
-    const remaining = dream - totalAfter;
-    dreamEl.textContent = '¥' + dream.toLocaleString();
-    dreamBar.style.width = Math.max(pct, 0) + '%';
+    var pct       = Math.min(totalAfter / dream * 100, 100);
+    var remaining = dream - totalAfter;
+    dreamEl.textContent   = '¥' + dream.toLocaleString();
+    dreamBar.style.width  = Math.max(pct, 0) + '%';
     dreamProg.textContent = '達成率 ' + (totalAfter / dream * 100).toFixed(2) + '%';
-    dreamSub.textContent = remaining > 0
-      ? 'あと ¥' + remaining.toLocaleString() + ' で達成！🌸'
-      : '🎉 目標達成おめでとう！！';
+    dreamSub.textContent  = remaining > 0
+      ? 'あと ¥' + remaining.toLocaleString() + ' で達成！'
+      : '目標達成おめでとう！！';
   } else {
-    dreamEl.textContent = '設定してね ✨';
-    dreamBar.style.width = '0%';
+    dreamEl.textContent   = '設定してね';
+    dreamBar.style.width  = '0%';
     dreamProg.textContent = '';
-    dreamSub.textContent = '設定タブから生涯目標を入力できます';
+    dreamSub.textContent  = '設定タブから生涯目標を入力できます';
   }
 }
 
-// ── メモ保存 ──────────────────────────
+function renderAll() { renderList(); renderDashboard(); }
+
+// ── メモ保存 ──
 function saveMemo() {
-  const text = document.getElementById('free-memo').value;
-  const now  = new Date();
-  const at   = now.getFullYear() + '/' +
-               String(now.getMonth()+1).padStart(2,'0') + '/' +
-               String(now.getDate()).padStart(2,'0') + ' ' +
-               String(now.getHours()).padStart(2,'0') + ':' +
-               String(now.getMinutes()).padStart(2,'0');
+  var text = document.getElementById('free-memo').value;
+  var now  = new Date();
+  var at   = now.getFullYear() + '/'
+    + String(now.getMonth()+1).padStart(2,'0') + '/'
+    + String(now.getDate()).padStart(2,'0') + ' '
+    + String(now.getHours()).padStart(2,'0') + ':'
+    + String(now.getMinutes()).padStart(2,'0');
   localStorage.setItem('free_memo', text);
   localStorage.setItem('free_memo_at', at);
   document.getElementById('memo-saved-at').textContent = '最終保存：' + at;
 }
 
+// ── タブ切替 ──
 function switchTab(name) {
-  const names = ['dashboard','input','list','settings'];
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', names[i] === name));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + name));
+  var names = ['dashboard','input','list','settings'];
+  document.querySelectorAll('.tab').forEach(function(t,i){
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(function(c){
+    c.classList.toggle('active', c.id === 'tab-' + name);
+  });
 }
 
 load();
 document.getElementById('date').value = new Date().toISOString().slice(0,10);
 renderAll();
 </script>
+  <!-- 持ち越しモーダル -->
+  <div class="modal-overlay" id="carry-modal" onclick="closeCarryModal(event)">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">🔄 持ち越し中の取引</div>
+        <button class="btn-modal-close" onclick="closeCarryModal()">閉じる</button>
+      </div>
+      <div id="carry-list"></div>
+    </div>
+  </div>
+
 </body>
 </html>
