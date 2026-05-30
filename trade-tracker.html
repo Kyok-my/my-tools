@@ -852,6 +852,294 @@
     font-size: 10px;
     color: var(--pink1);
   }
+
+  /* ─── ねこちゃん吹き出し（ヘッダー） ─── */
+  .cat-speech-wrap{display:flex;align-items:center;gap:8px;margin-top:7px;animation:fadeUp .5s ease .2s both;}
+  .cat-svg-header{flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(200,120,150,.25));animation:catBob 3s ease-in-out infinite;}
+  @keyframes catBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .cat-bubble{position:relative;background:white;border:2px solid var(--pink2);border-radius:14px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--text2);line-height:1.5;box-shadow:0 2px 10px var(--shadow);max-width:calc(100% - 58px);}
+  .cat-bubble::before{content:'';position:absolute;left:-9px;top:50%;transform:translateY(-50%);border-width:7px 9px 7px 0;border-style:solid;border-color:transparent var(--pink2) transparent transparent;}
+  .cat-bubble::after{content:'';position:absolute;left:-6px;top:50%;transform:translateY(-50%);border-width:6px 8px 6px 0;border-style:solid;border-color:transparent white transparent transparent;}
+
+  /* ─── 増資リンク ─── */
+  .investment-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--pink1);cursor:pointer;margin-top:6px;padding:2px 8px 2px 4px;border-radius:99px;border:1.5px solid var(--pink3);background:var(--pink5);transition:all .15s;text-decoration:none;}
+  .investment-link:hover{background:var(--pink3);color:var(--rose);transform:translateY(-1px);}
+  .investment-link-dot{width:6px;height:6px;background:var(--pink2);border-radius:50%;flex-shrink:0;}
+
+  /* ─── 達成吹き出し（月目標） ─── */
+  .achievement-bubble{display:none;align-items:center;gap:3px;margin-top:6px;animation:popIn .4s cubic-bezier(.4,2,.6,1);}
+  .achievement-bubble.show{display:flex;}
+  @keyframes popIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+  .bubble-crown{font-size:16px;animation:sway 2s ease-in-out infinite;}
+  @keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+  .bubble-text{position:relative;background:linear-gradient(135deg,#ffe082,#ffc107);color:#7a4f00;font-size:11px;font-weight:800;padding:3px 10px 3px 8px;border-radius:99px;box-shadow:0 2px 8px rgba(255,193,7,.4);}
+  .bubble-text::before{content:'';position:absolute;left:-6px;top:50%;transform:translateY(-50%);border-width:5px 7px 5px 0;border-style:solid;border-color:transparent #ffe082 transparent transparent;}
+
+  /* ─── ゲージ達成吹き出し ─── */
+  .gauge-bubble{display:none;justify-content:center;align-items:center;gap:3px;margin-top:5px;animation:popIn .4s cubic-bezier(.4,2,.6,1);}
+  .gauge-bubble.show{display:flex;}
+  .gauge-bubble-crown{font-size:13px;animation:sway 2s ease-in-out infinite;}
+  .gauge-bubble-text{position:relative;background:linear-gradient(135deg,#ffe082,#ffc107);color:#7a4f00;font-size:10px;font-weight:800;padding:2px 8px 2px 6px;border-radius:99px;box-shadow:0 2px 6px rgba(255,193,7,.4);}
+  .gauge-bubble-text::before{content:'';position:absolute;left:-5px;top:50%;transform:translateY(-50%);border-width:4px 6px 4px 0;border-style:solid;border-color:transparent #ffe082 transparent transparent;}
+
+  /* ─── 生涯目標：猫が歩くゲージ ─── */
+  .dream-gauge-wrap{position:relative;padding:0 8px;margin-bottom:4px;}
+  .dream-cat-track{position:relative;height:38px;margin-bottom:4px;}
+  .dream-cat-walker{position:absolute;bottom:0;transition:left .9s cubic-bezier(.4,2,.6,1);transform:translateX(-50%);filter:drop-shadow(0 2px 4px rgba(160,96,200,.3));animation:catWalk .7s ease-in-out infinite alternate;}
+  @keyframes catWalk{from{transform:translateX(-50%) rotate(-3deg)}to{transform:translateX(-50%) rotate(3deg) translateY(-2px)}}
+  .dream-cat-walker.goal-reached{animation:catDance .4s ease-in-out infinite alternate;}
+  @keyframes catDance{from{transform:translateX(-50%) rotate(-12deg) scale(1)}to{transform:translateX(-50%) rotate(12deg) scale(1.15) translateY(-4px)}}
+  .dream-bar-new-bg{background:#f0e8f8;border-radius:99px;height:12px;overflow:hidden;border:1.5px solid #dcc8f0;}
+  .dream-bar-new-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#c8a0e8,#a060c8);transition:width .9s cubic-bezier(.4,2,.6,1);position:relative;}
+  .dream-bar-new-fill::after{content:'';position:absolute;top:2px;left:6px;right:6px;height:3px;background:rgba(255,255,255,.5);border-radius:99px;}
+  .dream-bar-new-fill.over{background:linear-gradient(90deg,#ffe082,#ffc107);}
+
+  /* ─── 生涯目標達成吹き出し ─── */
+  .dream-achievement{display:none;justify-content:center;align-items:center;gap:4px;margin-top:10px;animation:popIn .4s cubic-bezier(.4,2,.6,1);}
+  .dream-achievement.show{display:flex;}
+  .dream-achievement-crown{font-size:20px;animation:sway 2s ease-in-out infinite;}
+  .dream-achievement-text{position:relative;background:linear-gradient(135deg,#ffe082,#ffc107);color:#7a4f00;font-size:12px;font-weight:800;padding:4px 12px 4px 10px;border-radius:99px;box-shadow:0 2px 8px rgba(255,193,7,.4);}
+  .dream-achievement-text::before{content:'';position:absolute;left:-6px;top:50%;transform:translateY(-50%);border-width:5px 7px 5px 0;border-style:solid;border-color:transparent #ffe082 transparent transparent;}
+
+  /* ─── 増資モーダル ─── */
+  .invest-item{background:var(--pink5);border-radius:14px;padding:12px 14px;margin-bottom:10px;border:1.5px solid var(--pink3);display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .invest-item-info{flex:1;}
+  .invest-item-date{font-size:12px;color:var(--text3);font-weight:700;margin-bottom:3px;}
+  .invest-item-amount{font-size:17px;font-weight:800;color:var(--rose);}
+  .invest-item-memo{font-size:11px;color:var(--text3);margin-top:2px;}
+  .invest-add-form{background:var(--pink4);border-radius:16px;padding:14px;margin-bottom:14px;border:1.5px solid var(--pink3);}
+  .invest-add-title{font-size:13px;font-weight:800;color:var(--rose);margin-bottom:10px;}
+  .invest-total{background:linear-gradient(135deg,var(--pink3),var(--lilac));border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:6px;}
+  .invest-total-label{font-size:11px;font-weight:700;color:var(--text2);}
+
+  /* ───────────────────────────────
+     ウォッチリスト
+  ─────────────────────────────── */
+  .wl-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .wl-full { grid-column: 1 / -1; }
+  .wl-opt {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text3);
+    background: var(--pink4);
+    padding: 1px 7px;
+    border-radius: 99px;
+    margin-left: 5px;
+    vertical-align: middle;
+    letter-spacing: 0;
+  }
+  .wl-stoploss-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wl-stoploss-prefix {
+    position: absolute;
+    left: 12px;
+    font-weight: 800;
+    color: var(--minus);
+    font-size: 14px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .wl-stoploss-suffix {
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text2);
+  }
+
+  /* ウォッチカード */
+  .wl-card {
+    background: var(--white);
+    border-radius: 18px;
+    border: 1.5px solid var(--pink3);
+    box-shadow: 0 4px 18px var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .wl-card:hover { box-shadow: 0 6px 24px var(--shadow); }
+  .wl-card.status-pass { opacity: 0.6; }
+
+  .wl-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px 10px;
+    border-bottom: 1.5px dotted var(--pink3);
+    cursor: grab;
+    user-select: none;
+  }
+  .wl-card-header:active { cursor: grabbing; }
+
+  .wl-drag-handle {
+    font-size: 18px;
+    color: var(--text3);
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+
+  .wl-stock-name {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .wl-badges { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+
+  .wl-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+  .wl-badge-today  { background: #ffeaea; color: #c03060; border: 1.5px solid #f0c0c8; }
+  .wl-badge-later  { background: var(--pink4); color: var(--text3); border: 1.5px solid var(--pink3); }
+  .wl-badge-watch  { background: var(--lilac); color: #6040a0; border: 1.5px solid #d8c0f0; }
+  .wl-badge-ready  { background: var(--mint); color: #2a7a5a; border: 1.5px solid #b0e0d0; }
+  .wl-badge-pass   { background: #f0f0f0; color: #999; border: 1.5px solid #ddd; }
+
+  .wl-card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 4px 0;
+  }
+
+  .wl-info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 7px 14px;
+    border-bottom: 1px dashed var(--pink4);
+    font-size: 12px;
+  }
+  .wl-info-row:last-child { border-bottom: none; }
+  .wl-info-row.full-row { grid-column: 1 / -1; }
+
+  .wl-info-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text3);
+    white-space: nowrap;
+    min-width: 70px;
+    padding-top: 1px;
+    letter-spacing: 0.04em;
+  }
+  .wl-info-val {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .wl-range-val { color: var(--rose); font-weight: 800; }
+  .wl-stoploss-val { color: var(--minus); font-weight: 800; }
+  .wl-ath-val { color: #a060c8; font-weight: 800; }
+
+  .wl-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 8px 12px;
+    border-top: 1.5px dotted var(--pink3);
+    background: var(--pink5);
+  }
+
+  .wl-btn-edit {
+    background: none;
+    border: 1.5px solid var(--pink2);
+    border-radius: 8px;
+    color: var(--pink1);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 12px;
+    transition: all 0.15s;
+  }
+  .wl-btn-edit:hover { background: var(--pink4); }
+
+  .wl-btn-del {
+    background: none;
+    border: 1.5px solid var(--pink3);
+    border-radius: 8px;
+    color: var(--text3);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 12px;
+    transition: all 0.15s;
+  }
+  .wl-btn-del:hover { border-color: var(--minus); color: var(--minus); background: #fff0f2; }
+
+  /* ドラッグ中スタイル */
+  .wl-dragging {
+    opacity: 0.4;
+    transform: scale(0.98);
+  }
+  .wl-drag-over {
+    border: 2px dashed var(--pink1) !important;
+    background: var(--pink5) !important;
+  }
+
+  /* ───────────────────────────────
+     テーマカラー選択
+  ─────────────────────────────── */
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .theme-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 8px 10px;
+    border: 2px solid var(--pink3);
+    border-radius: 16px;
+    background: var(--white);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { border-color: var(--pink1); transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow); }
+  .theme-btn.active {
+    border-color: var(--rose);
+    background: var(--pink4);
+    color: var(--rose);
+    box-shadow: 0 3px 12px var(--shadow);
+  }
+  .theme-preview {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.8);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    flex-shrink: 0;
+  }
+  .pink-prev   { background: linear-gradient(135deg, #f2bfcc, #e8a0b4); }
+  .green-prev  { background: linear-gradient(135deg, #a8d8b0, #5aaa70); }
+  .blue-prev   { background: linear-gradient(135deg, #a8c8f0, #5090d0); }
+  .yellow-prev { background: linear-gradient(135deg, #f8e090, #e8c040); }
+  .gray-prev   { background: linear-gradient(135deg, #c8ccd4, #8a9098); }
+  .purple-prev { background: linear-gradient(135deg, #c8a8e8, #9060c0); }
+
 </style>
 </head>
 <body>
@@ -860,7 +1148,58 @@
   <div class="header-deco">🌸💕✿🌷💗</div>
   <div class="header-inner">
     <h1><span>🌸</span>My Trade Note</h1>
-    <div class="tagline">毎日の売買を、かわいく記録しよう ♡</div>
+    <div class="cat-speech-wrap">
+      <svg class="cat-svg-header" width="50" height="50" viewBox="0 0 50 50" fill="none">
+        <!-- 影 -->
+        <ellipse cx="25" cy="46" rx="11" ry="3" fill="rgba(200,160,180,0.18)"/>
+        <!-- 体（白ふわ） -->
+        <ellipse cx="25" cy="34" rx="13" ry="11" fill="white" stroke="#f0d8e4" stroke-width="1"/>
+        <!-- 頭（丸くてでかい＝ブリショ） -->
+        <circle cx="25" cy="20" r="13" fill="white" stroke="#f0d8e4" stroke-width="1"/>
+        <!-- 耳（小さめ丸耳＝ブリショ特徴） -->
+        <ellipse cx="14" cy="9.5" rx="5" ry="4.5" fill="white" stroke="#f0d8e4" stroke-width="1"/>
+        <ellipse cx="14" cy="10" rx="2.8" ry="2.4" fill="#ffc8d8"/>
+        <ellipse cx="36" cy="9.5" rx="5" ry="4.5" fill="white" stroke="#f0d8e4" stroke-width="1"/>
+        <ellipse cx="36" cy="10" rx="2.8" ry="2.4" fill="#ffc8d8"/>
+        <!-- 目（'ω'風・くりくり） -->
+        <circle cx="19.5" cy="20" r="3.8" fill="#3a2a5a"/>
+        <circle cx="19.5" cy="20" r="2.5" fill="#5a4a8a"/>
+        <circle cx="30.5" cy="20" r="3.8" fill="#3a2a5a"/>
+        <circle cx="30.5" cy="20" r="2.5" fill="#5a4a8a"/>
+        <!-- ハイライト -->
+        <circle cx="20.8" cy="18.5" r="1.2" fill="white"/>
+        <circle cx="31.8" cy="18.5" r="1.2" fill="white"/>
+        <circle cx="19" cy="21" r="0.6" fill="white" opacity="0.6"/>
+        <circle cx="30" cy="21" r="0.6" fill="white" opacity="0.6"/>
+
+        <!-- 鼻 -->
+        <ellipse cx="25" cy="24.5" rx="1.6" ry="1.1" fill="#ff9aba"/>
+        <!-- ω口 -->
+        <path d="M20.5 27 Q22 29.5 23.5 27" stroke="#d4607a" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M23.5 27 Q25 29.5 26.5 27" stroke="#d4607a" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M26.5 27 Q28 29.5 29.5 27" stroke="#d4607a" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M20.5 27 Q19.7 25.8 20.5 25" stroke="#d4607a" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        <path d="M29.5 27 Q30.3 25.8 29.5 25" stroke="#d4607a" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        <!-- ほっぺのチーク -->
+        <ellipse cx="16" cy="25.5" rx="3.5" ry="2" fill="#ffb0c8" opacity="0.4"/>
+        <ellipse cx="34" cy="25.5" rx="3.5" ry="2" fill="#ffb0c8" opacity="0.4"/>
+        <!-- ひげ（左） -->
+        <line x1="5" y1="23" x2="16" y2="24.2" stroke="#d0c0d0" stroke-width="0.9" stroke-linecap="round"/>
+        <line x1="5" y1="25.5" x2="16" y2="25.5" stroke="#d0c0d0" stroke-width="0.9" stroke-linecap="round"/>
+        <line x1="5" y1="28" x2="16" y2="26.8" stroke="#d0c0d0" stroke-width="0.9" stroke-linecap="round"/>
+        <!-- ひげ（右） -->
+        <line x1="34" y1="24.2" x2="45" y2="23" stroke="#d0c0d0" stroke-width="0.9" stroke-linecap="round"/>
+        <line x1="34" y1="25.5" x2="45" y2="25.5" stroke="#d0c0d0" stroke-width="0.9" stroke-linecap="round"/>
+        <line x1="34" y1="26.8" x2="45" y2="28" stroke="#d0c0d0" stroke-width="0.9" stroke-linecap="round"/>
+        <!-- 前脚 -->
+        <ellipse cx="17" cy="43.5" rx="5" ry="3.5" fill="white" stroke="#f0d8e4" stroke-width="1"/>
+        <ellipse cx="33" cy="43.5" rx="5" ry="3.5" fill="white" stroke="#f0d8e4" stroke-width="1"/>
+        <!-- しっぽ -->
+        <path d="M38 36 Q46 28 43 20" stroke="#f0e0ea" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+      </svg>
+      <div class="cat-bubble" id="cat-message">毎日の売買を、かわいく記録しよう ♡</div>
+    </div>
   </div>
 </header>
 
@@ -870,6 +1209,7 @@
     <button class="tab active" onclick="switchTab('dashboard')">📊 ホーム</button>
     <button class="tab" onclick="switchTab('input')">✏️ 入力</button>
     <button class="tab" onclick="switchTab('list')">📋 一覧</button>
+    <button class="tab" onclick="switchTab('watch')">👁 注目株</button>
     <button class="tab" onclick="switchTab('settings')">⚙️ 設定</button>
   </div>
 
@@ -884,6 +1224,19 @@
       <div class="summary-item">
         <div class="summary-label">🌱 元手からの増減</div>
         <div class="summary-value" id="s-growth">—</div>
+      </div>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-label">🏦 現在の元手</div>
+        <div class="summary-value" id="s-base" style="font-size:17px">¥ —</div>
+        <span class="investment-link" onclick="openInvestModal()">
+          <span class="investment-link-dot"></span>増資履歴
+        </span>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">💹 今月勝率</div>
+        <div class="summary-value" id="s-winrate">— %</div>
       </div>
     </div>
 
@@ -905,6 +1258,10 @@
         </div>
         <div class="gauge-amount" id="gauge-amount-1">—</div>
         <div class="gauge-goal" id="gauge-goal-1"></div>
+        <div class="gauge-bubble" id="gauge-bubble-1">
+          <span class="gauge-bubble-crown">&#x1F451;</span>
+          <span class="gauge-bubble-text">&#x1F4AC; 達成！</span>
+        </div>
       </div>
 
       <div class="gauge-card second" id="gauge-card-2">
@@ -921,6 +1278,10 @@
         </div>
         <div class="gauge-amount" id="gauge-amount-2">—</div>
         <div class="gauge-goal" id="gauge-goal-2"></div>
+        <div class="gauge-bubble" id="gauge-bubble-2">
+          <span class="gauge-bubble-crown">&#x1F451;</span>
+          <span class="gauge-bubble-text">&#x1F4AC; 達成！</span>
+        </div>
       </div>
     </div>
 
@@ -930,6 +1291,10 @@
         <div class="summary-value" id="s-month">—</div>
         <div class="goal-bar-bg"><div class="goal-bar-fill" id="bar-month" style="width:0%"></div></div>
         <div class="goal-pct" id="pct-month"></div>
+        <div class="achievement-bubble" id="bubble-month">
+          <span class="bubble-crown">&#x1F451;</span>
+          <span class="bubble-text">&#x1F4AC; 月目標達成！</span>
+        </div>
       </div>
       <div class="summary-item">
         <div class="summary-label">📅 年間利益（税後）</div>
@@ -973,13 +1338,60 @@
       </div>
     </div>
 
-    <!-- 生涯目標カード -->
+    <!-- 生涯目標カード（猫が歩くゲージ） -->
     <div class="dream-card" id="dream-card-wrap">
       <div class="dream-title">🌟 生涯で目指す目標金額</div>
       <div class="dream-amount" id="dream-amount">設定してね ✨</div>
       <div class="dream-progress" id="dream-progress"></div>
-      <div class="dream-bar-bg"><div class="dream-bar-fill" id="dream-bar" style="width:0%"></div></div>
+      <div class="dream-gauge-wrap">
+        <div class="dream-cat-track">
+          <div class="dream-cat-walker" id="dream-cat" style="left:0%">
+            <svg width="36" height="32" viewBox="0 0 36 32" fill="none">
+              <!-- 体 -->
+              <ellipse cx="18" cy="23" rx="10" ry="7.5" fill="white" stroke="#f0d8e4" stroke-width="0.8"/>
+              <!-- 頭（大きめ丸＝ブリショ） -->
+              <circle cx="18" cy="13" r="9" fill="white" stroke="#f0d8e4" stroke-width="0.8"/>
+              <!-- 耳（小さめ丸耳） -->
+              <ellipse cx="10.5" cy="6" rx="3.8" ry="3.4" fill="white" stroke="#f0d8e4" stroke-width="0.8"/>
+              <ellipse cx="10.5" cy="6.5" rx="2.1" ry="1.8" fill="#ffc8d8"/>
+              <ellipse cx="25.5" cy="6" rx="3.8" ry="3.4" fill="white" stroke="#f0d8e4" stroke-width="0.8"/>
+              <ellipse cx="25.5" cy="6.5" rx="2.1" ry="1.8" fill="#ffc8d8"/>
+              <!-- 目（'ω'風） -->
+              <circle cx="13.5" cy="13" r="2.8" fill="#3a2a5a"/>
+              <circle cx="13.5" cy="13" r="1.8" fill="#5a4a8a"/>
+              <circle cx="22.5" cy="13" r="2.8" fill="#3a2a5a"/>
+              <circle cx="22.5" cy="13" r="1.8" fill="#5a4a8a"/>
+              <circle cx="14.4" cy="11.8" r="0.95" fill="white"/>
+              <circle cx="23.4" cy="11.8" r="0.95" fill="white"/>
+              <!-- 目の上ライン（'） -->
+              <path d="M11.2 10.6 Q13.5 9.2 15.8 10.6" stroke="#3a2a5a" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+              <path d="M20.2 10.6 Q22.5 9.2 24.8 10.6" stroke="#3a2a5a" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+              <!-- ほっぺチーク -->
+              <ellipse cx="10" cy="16.5" rx="2.8" ry="1.6" fill="#ffb0c8" opacity="0.4"/>
+              <ellipse cx="26" cy="16.5" rx="2.8" ry="1.6" fill="#ffb0c8" opacity="0.4"/>
+              <!-- 鼻 -->
+              <ellipse cx="18" cy="17" rx="1.2" ry="0.9" fill="#ff9aba"/>
+              <!-- ω口 -->
+              <path d="M14 19.5 Q15.5 21.5 17 19.5" stroke="#d4607a" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+              <path d="M17 19.5 Q18.5 21.5 20 19.5" stroke="#d4607a" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+              <path d="M20 19.5 Q21.5 21.5 23 19.5" stroke="#d4607a" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+              <path d="M14 19.5 Q13.3 18.4 14 17.8" stroke="#d4607a" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+              <path d="M23 19.5 Q23.7 18.4 23 17.8" stroke="#d4607a" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+              <!-- 前脚 -->
+              <ellipse cx="12" cy="29.5" rx="4" ry="2.5" fill="white" stroke="#f0d8e4" stroke-width="0.8"/>
+              <ellipse cx="24" cy="29.5" rx="4" ry="2.5" fill="white" stroke="#f0d8e4" stroke-width="0.8"/>
+              <!-- しっぽ -->
+              <path d="M28 24 Q34 18 32 11" stroke="#f0e0ea" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="dream-bar-new-bg"><div class="dream-bar-new-fill" id="dream-bar" style="width:0%"></div></div>
+      </div>
       <div class="dream-sub" id="dream-sub"></div>
+      <div class="dream-achievement" id="dream-achievement">
+        <span class="dream-achievement-crown">&#x1F451;</span>
+        <span class="dream-achievement-text">&#x1F4AC; 生涯目標達成！おめでとう&#x1F389;</span>
+      </div>
     </div>
 
     <!-- フリーメモ -->
@@ -1061,12 +1473,110 @@
     </div>
   </div>
 
+  <!-- ウォッチリスト -->
+  <div class="tab-content" id="tab-watch">
+
+    <div class="hint" style="display:flex;align-items:center;gap:8px">
+      <span>👁</span>
+      <span>翌朝のねらい目銘柄をストックしておこう！並び替えは <strong>☰</strong> をドラッグ</span>
+    </div>
+
+    <!-- 追加フォーム -->
+    <div class="card">
+      <div class="card-title"><div class="icon">➕</div>銘柄を追加する</div>
+
+      <div class="wl-form-grid">
+        <!-- 行1: 優先度・ステータス -->
+        <div class="form-group">
+          <label>🔥 優先度</label>
+          <select id="wl-priority">
+            <option value="today">🎯 今日狙う</option>
+            <option value="later">📅 来週以降</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>📌 ステータス</label>
+          <select id="wl-status">
+            <option value="watch">👀 ウォッチ中</option>
+            <option value="ready">✅ 準備OK</option>
+            <option value="pass">⏭ 見送り</option>
+          </select>
+        </div>
+
+        <!-- 行2: 銘柄名 -->
+        <div class="form-group wl-full">
+          <label>📌 銘柄名（必須）</label>
+          <input type="text" id="wl-stock" placeholder="例：三井金属（5706）">
+        </div>
+
+        <!-- 行3: 指値レンジ -->
+        <div class="form-group">
+          <label>📉 指値下限（円）<span class="wl-opt">任意</span></label>
+          <input type="number" id="wl-price-low" placeholder="例：1800">
+        </div>
+        <div class="form-group">
+          <label>📈 指値上限（円）<span class="wl-opt">任意</span></label>
+          <input type="number" id="wl-price-high" placeholder="例：2000">
+        </div>
+
+        <!-- 行4: 損切りライン・上場来高値 -->
+        <div class="form-group">
+          <label>🛑 損切りライン<span class="wl-opt">任意</span></label>
+          <div class="wl-stoploss-wrap">
+            <span class="wl-stoploss-prefix">▲</span>
+            <input type="number" id="wl-stoploss" placeholder="例：100" min="0" style="padding-left:30px">
+            <span class="wl-stoploss-suffix">円まで</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>🏆 上場来高値（円）<span class="wl-opt">任意</span></label>
+          <input type="number" id="wl-ath" placeholder="例：3500">
+        </div>
+
+        <!-- 行5: 出来高・エントリー条件 -->
+        <div class="form-group">
+          <label>📊 出来高目安<span class="wl-opt">任意</span></label>
+          <input type="text" id="wl-volume" placeholder="例：100万株以上">
+        </div>
+        <div class="form-group">
+          <label>🎯 エントリー条件<span class="wl-opt">任意</span></label>
+          <input type="text" id="wl-entry" placeholder="例：前日高値抜けで買い">
+        </div>
+
+        <!-- 行6: 注目理由・イベント -->
+        <div class="form-group wl-full">
+          <label>📝 注目理由・イベント<span class="wl-opt">任意</span></label>
+          <input type="text" id="wl-reason" placeholder="例：決算良好。配当5/20。上方修正期待。">
+        </div>
+      </div>
+      <button class="btn-add" onclick="addWatchItem()" style="margin-top:4px">＋ 追加する</button>
+    </div>
+
+    <!-- ウォッチリスト一覧 -->
+    <div id="wl-list-wrap">
+      <div id="wl-empty" class="empty">まだ登録されていません🌸<br>上のフォームから追加してみよう！</div>
+      <div id="wl-list"></div>
+    </div>
+  </div>
+
   <!-- 設定 -->
   <div class="tab-content" id="tab-settings">
     <div class="card">
+      <div class="card-title"><div class="icon">🎨</div>テーマカラー</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:14px;font-weight:500">気分で着せ替えできるよ🌈</div>
+      <div class="theme-grid" id="theme-grid">
+        <button class="theme-btn active" data-theme="pink"   onclick="applyTheme('pink')">  <span class="theme-preview pink-prev"></span>  <span>🌸 ピンク</span>  </button>
+        <button class="theme-btn"        data-theme="green"  onclick="applyTheme('green')"> <span class="theme-preview green-prev"></span> <span>🌿 グリーン</span> </button>
+        <button class="theme-btn"        data-theme="blue"   onclick="applyTheme('blue')">  <span class="theme-preview blue-prev"></span>  <span>🩵 ブルー</span>  </button>
+        <button class="theme-btn"        data-theme="yellow" onclick="applyTheme('yellow')"><span class="theme-preview yellow-prev"></span><span>🌻 イエロー</span></button>
+        <button class="theme-btn"        data-theme="gray"   onclick="applyTheme('gray')">  <span class="theme-preview gray-prev"></span>  <span>🩶 グレー</span>  </button>
+        <button class="theme-btn"        data-theme="purple" onclick="applyTheme('purple')"><span class="theme-preview purple-prev"></span><span>💜 パープル</span></button>
+      </div>
+    </div>
+    <div class="card">
       <div class="card-title"><div class="icon">🎯</div>目標・資産の設定</div>
       <div class="setting-row">
-        <span class="setting-label">💰 元手（初期資金）</span>
+        <span class="setting-label">💰 初期元手（最初に入れた金額）</span>
         <input type="number" class="setting-input" id="cfg-seed" placeholder="900000">
       </div>
       <div class="setting-row">
@@ -1116,11 +1626,13 @@
 
 <script>
 let trades = [];
+let investments = [];
 let cfg = { seed: 900000, week: 0, month: 0, periodMode: 'week', periodStart: 16, periodName: '後半', dream: 0 };
 
 // ── データ読み込み ──
 function load() {
   try { trades = JSON.parse(localStorage.getItem('trades_v2')) || []; } catch(e){ trades=[]; }
+  try { investments = JSON.parse(localStorage.getItem('investments_v1')) || []; } catch(e){ investments=[]; }
   try {
     const saved = JSON.parse(localStorage.getItem('cfg_v2'));
     if (saved) cfg = Object.assign(cfg, saved);
@@ -1140,6 +1652,9 @@ function load() {
 }
 
 function saveTrades() { localStorage.setItem('trades_v2', JSON.stringify(trades)); }
+function saveInvestments() { localStorage.setItem('investments_v1', JSON.stringify(investments)); }
+function totalInvestment() { return investments.reduce(function(s,iv){ return s+(iv.amount||0); },0); }
+function currentBase() { return (cfg.seed||0)+totalInvestment(); }
 
 function saveSettings() {
   cfg.seed        = parseFloat(document.getElementById('cfg-seed').value)         || 900000;
@@ -1425,7 +1940,7 @@ function saveCarryEdit(id) {
 }
 
 // ── ゲージ描画 ──
-function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, val, goal, title, colorClass) {
+function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, bubbleId, val, goal, title, colorClass) {
   var TOTAL = 157;
   document.getElementById(titleId).textContent = title;
 
@@ -1435,6 +1950,7 @@ function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, val, goal, 
   var path   = document.getElementById(pathId);
   var card   = document.getElementById(cardId);
 
+  var bubbleEl = document.getElementById(bubbleId);
   if (goal <= 0) {
     path.setAttribute('stroke-dasharray', '0 ' + TOTAL);
     pctEl.textContent  = '—';
@@ -1442,6 +1958,7 @@ function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, val, goal, 
     amEl.textContent   = val !== 0 ? fmtNum(val) : '—';
     goalEl.textContent = '目標を設定してね';
     card.classList.remove('over');
+    if(bubbleEl) bubbleEl.classList.remove('show');
     return;
   }
 
@@ -1456,11 +1973,13 @@ function drawGauge(pathId, cardId, pctId, amountId, goalId, titleId, val, goal, 
     path.setAttribute('stroke', '#e8a020');
     card.classList.add('over');
     pctEl.className = 'gauge-pct gold';
+    if(bubbleEl) bubbleEl.classList.add('show');
   } else {
     card.classList.remove('over');
     pctEl.className = 'gauge-pct ' + colorClass;
     if (colorClass === 'pink')   path.setAttribute('stroke', '#f2bfcc');
     if (colorClass === 'purple') path.setAttribute('stroke', '#c8b0e8');
+    if(bubbleEl) bubbleEl.classList.remove('show');
   }
 
   pctEl.textContent  = rawPct + '%';
@@ -1520,29 +2039,40 @@ function renderDashboard() {
   });
 
   // 資産・増減
-  var asset = cfg.seed + totalAfter;
+  // asset calculated above
+  var base  = currentBase();
+  var asset = base + totalAfter;
   document.getElementById('s-asset').textContent = '¥' + asset.toLocaleString();
+  var sBase = document.getElementById('s-base');
+  if(sBase) sBase.textContent = '¥' + base.toLocaleString();
   var gEl = document.getElementById('s-growth');
-  gEl.textContent = fmtNum(totalAfter) + (cfg.seed ? '（' + (totalAfter/cfg.seed*100).toFixed(1) + '%）' : '');
+  gEl.textContent = fmtNum(totalAfter) + (base ? '（' + (totalAfter/base*100).toFixed(1) + '%）' : '');
   gEl.className = 'summary-value ' + (totalAfter >= 0 ? 'plus' : 'minus');
 
   // ゲージ（月＋前半/後半を2行で表示）
   var monthLabel = (mm + 1) + '月';
-  drawGauge('gauge-path-1','gauge-card-1','gauge-pct-1','gauge-amount-1','gauge-goal-1','gauge-title-1',
+  drawGauge('gauge-path-1','gauge-card-1','gauge-pct-1','gauge-amount-1','gauge-goal-1','gauge-title-1','gauge-bubble-1',
     firstSum, cfg.week, monthLabel + ' ' + firstName, 'pink');
-  drawGauge('gauge-path-2','gauge-card-2','gauge-pct-2','gauge-amount-2','gauge-goal-2','gauge-title-2',
+  drawGauge('gauge-path-2','gauge-card-2','gauge-pct-2','gauge-amount-2','gauge-goal-2','gauge-title-2','gauge-bubble-2',
     secondSum, cfg.week, monthLabel + ' ' + secondName, 'purple');
 
   // 今月
   var mEl = document.getElementById('s-month');
   mEl.textContent = fmtNum(monthSum);
   mEl.className = 'summary-value ' + (monthSum >= 0 ? 'plus' : 'minus');
+  var monthPctVal = 0;
   if (cfg.month > 0) {
     var mPct = Math.round(monthSum / cfg.month * 100);
+    monthPctVal = mPct;
     var bar  = document.getElementById('bar-month');
     bar.style.width = Math.min(Math.max(mPct,0),100) + '%';
     bar.className = 'goal-bar-fill' + (mPct >= 100 ? ' over' : '');
     document.getElementById('pct-month').textContent = '目標達成率 ' + mPct + '%';
+    var bm = document.getElementById('bubble-month');
+    if(bm){ if(mPct>=100) bm.classList.add('show'); else bm.classList.remove('show'); }
+  } else {
+    var bm2 = document.getElementById('bubble-month');
+    if(bm2) bm2.classList.remove('show');
   }
 
   // 年間・持越・勝率
@@ -1614,27 +2144,122 @@ function renderDashboard() {
     }).join('');
   }
 
-  // 生涯目標
+  // 生涯目標 + 猫ゲージ
   var dream   = cfg.dream || 0;
   var dreamEl = document.getElementById('dream-amount');
   var dreamBar  = document.getElementById('dream-bar');
   var dreamProg = document.getElementById('dream-progress');
   var dreamSub  = document.getElementById('dream-sub');
+  var dreamAch  = document.getElementById('dream-achievement');
+  var dreamCat  = document.getElementById('dream-cat');
   if (dream > 0) {
-    var pct       = Math.min(totalAfter / dream * 100, 100);
+    var rawDPct   = totalAfter / dream * 100;
+    var clampD    = Math.min(Math.max(rawDPct, 0), 100);
     var remaining = dream - totalAfter;
-    dreamEl.textContent   = '¥' + dream.toLocaleString();
-    dreamBar.style.width  = Math.max(pct, 0) + '%';
-    dreamProg.textContent = '達成率 ' + (totalAfter / dream * 100).toFixed(2) + '%';
-    dreamSub.textContent  = remaining > 0
-      ? 'あと ¥' + remaining.toLocaleString() + ' で達成！'
-      : '目標達成おめでとう！！';
+    dreamEl.textContent  = '¥' + dream.toLocaleString();
+    dreamBar.style.width = clampD + '%';
+    dreamProg.textContent = '達成率 ' + rawDPct.toFixed(2) + '%';
+    if(dreamCat) dreamCat.style.left = Math.min(clampD, 95) + '%';
+    if (rawDPct >= 100) {
+      if(dreamBar) dreamBar.className = 'dream-bar-new-fill over';
+      if(dreamCat) dreamCat.classList.add('goal-reached');
+      dreamSub.textContent = '';
+      if(dreamAch) dreamAch.classList.add('show');
+    } else {
+      if(dreamBar) dreamBar.className = 'dream-bar-new-fill';
+      if(dreamCat) dreamCat.classList.remove('goal-reached');
+      dreamSub.textContent = 'あと ¥' + remaining.toLocaleString() + ' で達成！';
+      if(dreamAch) dreamAch.classList.remove('show');
+    }
   } else {
-    dreamEl.textContent   = '設定してね';
-    dreamBar.style.width  = '0%';
+    dreamEl.textContent  = '設定してね ✨';
+    if(dreamBar){ dreamBar.style.width='0%'; dreamBar.className='dream-bar-new-fill'; }
     dreamProg.textContent = '';
     dreamSub.textContent  = '設定タブから生涯目標を入力できます';
+    if(dreamAch) dreamAch.classList.remove('show');
+    if(dreamCat) dreamCat.style.left = '0%';
   }
+
+  // 猫メッセージ更新
+  var catMsg = getCatMessage(monthSum, monthPctVal, yearSum, carryCount, totalAfter, dream);
+  var catEl = document.getElementById('cat-message');
+  if(catEl) catEl.textContent = catMsg;
+}
+
+// ── 猫メッセージ（データ連動） ──
+function getCatMessage(monthSum, monthPct, yearSum, carryCount, totalAfter, dream) {
+  var msgs;
+  if(dream > 0 && totalAfter >= dream)
+    return '生涯目標達成したにゃ！！\uD83C\uDF89 すごすぎる〜！おめでとうにゃ\uD83D\uDC51';
+  if(monthPct >= 100){
+    msgs=['月の目標達成！\uD83C\uDF89 最高ににゃ〜！','今月もやりきったにゃ！\uD83D\uDC51 天才トレーダーだにゃ！','月目標クリア！\u2728 このまま突き進むにゃ〜！'];
+    return msgs[Math.floor(Math.random()*msgs.length)];
+  }
+  if(monthPct >= 70){
+    msgs=['目標まであと少しにゃ！\uD83C\uDF38 もう一踏ん張りにゃ！','調子いいにゃ〜！\u2728 ゴールが見えてきたにゃ！','あともう少しだにゃ〜！\uD83D\uDC3E 応援してるにゃ！'];
+    return msgs[Math.floor(Math.random()*msgs.length)];
+  }
+  if(monthSum > 0){
+    msgs=['今月もプラスにゃ！\uD83C\uDF38 このペースで行くにゃ！','いい感じにゃ〜！\u2728 相場は長期戦にゃ！','ちゃんと利益出てるにゃ！\uD83D\uDC3E えらいえらいにゃ！','今日も記録えらいにゃ！\uD83D\uDC95 継続は力なりにゃ！'];
+    return msgs[Math.floor(Math.random()*msgs.length)];
+  }
+  if(carryCount >= 3){
+    msgs=['持ち越し中にゃ…\uD83C\uDF19 焦らずじっくり待つにゃ！','持ち越し多いにゃ\uD83C\uDF38 慎重に行くにゃ！','相場を信じるにゃ…\uD83D\uDC3E ロスカットも大事にゃ！'];
+    return msgs[Math.floor(Math.random()*msgs.length)];
+  }
+  msgs=['相場が荒れてても大丈夫にゃ！\uD83C\uDF38 また波は来るにゃ！','今日の損は明日の肥やしにゃ！\uD83D\uDCAAA 諦めないにゃ！','株は長期戦にゃ！\uD83D\uDC3E 今日も記録えらいにゃ〜！','ドンマイにゃ！\uD83D\uDE3A 相場は毎日変わるにゃ！','焦らないにゃ〜\uD83C\uDF19 チャンスは必ず来るにゃ！','にゃんと言っても継続が大事にゃ！\u2728 応援してるにゃ！','今日も開いてくれてありがとうにゃ\uD83C\uDF38 一緒に頑張るにゃ！'];
+  return msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+// ── 増資モーダル ──
+function openInvestModal() {
+  var today = new Date().toISOString().slice(0,10);
+  document.getElementById('invest-date').value = today;
+  renderInvestModal();
+  document.getElementById('invest-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeInvestModal(e) {
+  if(e && e.target !== document.getElementById('invest-modal')) return;
+  document.getElementById('invest-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function renderInvestModal() {
+  var seed = cfg.seed||0, inv = totalInvestment(), base = seed+inv;
+  document.getElementById('modal-seed').textContent = '¥'+seed.toLocaleString();
+  document.getElementById('modal-invest-total').textContent = '¥'+inv.toLocaleString();
+  document.getElementById('modal-base-total').textContent = '¥'+base.toLocaleString();
+  var list = document.getElementById('invest-list');
+  if(investments.length===0){
+    list.innerHTML='<div class="empty">まだ増資履歴がありません\uD83C\uDF38<br>上のフォームから追加してね！</div>';return;
+  }
+  var sorted = investments.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+  var html='';
+  sorted.forEach(function(iv){
+    html+='<div class="invest-item"><div class="invest-item-info">';
+    html+='<div class="invest-item-date">\uD83D\uDCC5 '+iv.date+'</div>';
+    html+='<div class="invest-item-amount">＋¥'+iv.amount.toLocaleString()+'</div>';
+    if(iv.memo) html+='<div class="invest-item-memo">\uD83D\uDCDD '+iv.memo+'</div>';
+    html+='</div><button class="btn-del" data-id="'+iv.id+'" onclick="deleteInvestment(this.dataset.id)">削除</button></div>';
+  });
+  list.innerHTML=html;
+}
+function addInvestment() {
+  var dv=document.getElementById('invest-date').value;
+  var av=parseFloat(document.getElementById('invest-amount').value);
+  var mv=document.getElementById('invest-memo').value.trim();
+  if(!dv||isNaN(av)||av<=0){alert('日付と金額を入力してください');return;}
+  var nid=investments.length>0?Math.max.apply(null,investments.map(function(iv){return iv.id;}))+1:1;
+  investments.push({id:nid,date:dv,amount:av,memo:mv});
+  saveInvestments();
+  document.getElementById('invest-amount').value='';
+  document.getElementById('invest-memo').value='';
+  renderInvestModal();renderDashboard();
+}
+function deleteInvestment(id) {
+  if(!confirm('この増資履歴を削除しますか？'))return;
+  investments=investments.filter(function(iv){return iv.id!==Number(id);});
+  saveInvestments();renderInvestModal();renderDashboard();
 }
 
 function renderAll() { renderList(); renderDashboard(); }
@@ -1655,20 +2280,314 @@ function saveMemo() {
 
 // ── タブ切替 ──
 function switchTab(name) {
-  var names = ['dashboard','input','list','settings'];
+  var names = ['dashboard','input','list','watch','settings'];
   document.querySelectorAll('.tab').forEach(function(t,i){
     t.classList.toggle('active', names[i] === name);
   });
   document.querySelectorAll('.tab-content').forEach(function(c){
     c.classList.toggle('active', c.id === 'tab-' + name);
   });
+  if (name === 'watch') renderWatchList();
+}
+
+// ────────────────────────────────────────────
+// ウォッチリスト
+// ────────────────────────────────────────────
+var watchItems = [];
+var wlDragSrcIdx = null;
+
+function saveWatchItems() {
+  localStorage.setItem('watchlist_v1', JSON.stringify(watchItems));
+}
+
+function loadWatchItems() {
+  try { watchItems = JSON.parse(localStorage.getItem('watchlist_v1')) || []; } catch(e){ watchItems=[]; }
+}
+
+function addWatchItem() {
+  var stock = document.getElementById('wl-stock').value.trim();
+  if (!stock) { alert('銘柄名は必須です'); return; }
+
+  var nid = watchItems.length > 0 ? Math.max.apply(null, watchItems.map(function(w){ return w.id; })) + 1 : 1;
+  watchItems.unshift({
+    id: nid,
+    stock:    stock,
+    priority: document.getElementById('wl-priority').value,
+    status:   document.getElementById('wl-status').value,
+    priceLow: document.getElementById('wl-price-low').value.trim(),
+    priceHigh:document.getElementById('wl-price-high').value.trim(),
+    stoploss: document.getElementById('wl-stoploss').value.trim(),
+    ath:      document.getElementById('wl-ath').value.trim(),
+    volume:   document.getElementById('wl-volume').value.trim(),
+    entry:    document.getElementById('wl-entry').value.trim(),
+    reason:   document.getElementById('wl-reason').value.trim()
+  });
+  saveWatchItems();
+
+  ['wl-stock','wl-price-low','wl-price-high','wl-stoploss','wl-ath','wl-volume','wl-entry','wl-reason'].forEach(function(id){
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('wl-priority').value = 'today';
+  document.getElementById('wl-status').value = 'watch';
+  renderWatchList();
+}
+
+function deleteWatchItem(id) {
+  if (!confirm('このウォッチ銘柄を削除しますか？')) return;
+  watchItems = watchItems.filter(function(w){ return w.id !== Number(id); });
+  saveWatchItems();
+  renderWatchList();
+}
+
+function renderWatchList() {
+  var list  = document.getElementById('wl-list');
+  var empty = document.getElementById('wl-empty');
+  if (watchItems.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  var priorityLabel = { today:'今日狙う', later:'来週以降' };
+  var statusLabel   = { watch:'ウォッチ中', ready:'準備OK', pass:'見送り' };
+  var priorityBadge = { today:'wl-badge-today', later:'wl-badge-later' };
+  var statusBadge   = { watch:'wl-badge-watch', ready:'wl-badge-ready', pass:'wl-badge-pass' };
+
+  var html = '';
+  watchItems.forEach(function(w, idx) {
+    var pBadge = '<span class="wl-badge ' + (priorityBadge[w.priority]||'wl-badge-later') + '">' + (priorityLabel[w.priority]||w.priority) + '</span>';
+    var sBadge = '<span class="wl-badge ' + (statusBadge[w.status]||'wl-badge-watch') + '">' + (statusLabel[w.status]||w.status) + '</span>';
+
+    var rangeHtml = '';
+    if (w.priceLow || w.priceHigh) {
+      var lo = w.priceLow  ? '¥' + Number(w.priceLow).toLocaleString()  : '—';
+      var hi = w.priceHigh ? '¥' + Number(w.priceHigh).toLocaleString() : '—';
+      rangeHtml = '<div class="wl-info-row"><span class="wl-info-label">📊 指値レンジ</span><span class="wl-info-val wl-range-val">' + lo + ' 〜 ' + hi + '</span></div>';
+    }
+    var slHtml = w.stoploss
+      ? '<div class="wl-info-row"><span class="wl-info-label">🛑 損切りライン</span><span class="wl-info-val wl-stoploss-val">▲' + Number(w.stoploss).toLocaleString() + '円まで</span></div>' : '';
+    var athHtml = w.ath
+      ? '<div class="wl-info-row"><span class="wl-info-label">🏆 上場来高値</span><span class="wl-info-val wl-ath-val">¥' + Number(w.ath).toLocaleString() + '</span></div>' : '';
+    var volHtml = w.volume
+      ? '<div class="wl-info-row"><span class="wl-info-label">📈 出来高目安</span><span class="wl-info-val">' + w.volume + '</span></div>' : '';
+    var entryHtml = w.entry
+      ? '<div class="wl-info-row"><span class="wl-info-label">🎯 エントリー</span><span class="wl-info-val">' + w.entry + '</span></div>' : '';
+    var reasonHtml = w.reason
+      ? '<div class="wl-info-row full-row"><span class="wl-info-label">📝 注目理由</span><span class="wl-info-val">' + w.reason + '</span></div>' : '';
+
+    var bodyRows = rangeHtml + slHtml + athHtml + volHtml + entryHtml + reasonHtml;
+    var statusClass = w.status === 'pass' ? ' status-pass' : '';
+
+    html += '<div class="wl-card' + statusClass + '" draggable="true" data-idx="' + idx + '" '
+      + 'ondragstart="wlDragStart(event,' + idx + ')" ondragover="wlDragOver(event)" '
+      + 'ondrop="wlDrop(event,' + idx + ')" ondragleave="wlDragLeave(event)" ondragend="wlDragEnd(event)">';
+    html += '<div class="wl-card-header">';
+    html += '<span class="wl-drag-handle">☰</span>';
+    html += '<span class="wl-stock-name">' + w.stock + '</span>';
+    html += '<div class="wl-badges">' + pBadge + sBadge + '</div>';
+    html += '</div>';
+    if (bodyRows) {
+      html += '<div class="wl-card-body">' + bodyRows + '</div>';
+    }
+    html += '<div class="wl-card-footer">';
+    html += '<button class="wl-btn-edit" onclick="openWlEdit(' + w.id + ')">✏️ 編集</button>';
+    html += '<button class="wl-btn-del" onclick="deleteWatchItem(' + w.id + ')">削除</button>';
+    html += '</div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+// ドラッグ＆ドロップ並び替え
+function wlDragStart(e, idx) {
+  wlDragSrcIdx = idx;
+  e.currentTarget.classList.add('wl-dragging');
+}
+function wlDragEnd(e) {
+  e.currentTarget.classList.remove('wl-dragging');
+  document.querySelectorAll('.wl-card').forEach(function(c){ c.classList.remove('wl-drag-over'); });
+}
+function wlDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('wl-drag-over');
+}
+function wlDragLeave(e) {
+  e.currentTarget.classList.remove('wl-drag-over');
+}
+function wlDrop(e, toIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('wl-drag-over');
+  if (wlDragSrcIdx === null || wlDragSrcIdx === toIdx) return;
+  var moved = watchItems.splice(wlDragSrcIdx, 1)[0];
+  watchItems.splice(toIdx, 0, moved);
+  wlDragSrcIdx = null;
+  saveWatchItems();
+  renderWatchList();
+}
+
+// 編集モーダル（簡易インライン）
+function openWlEdit(id) {
+  var w = watchItems.find(function(x){ return x.id === id; });
+  if (!w) return;
+  // フォームに値を戻す
+  document.getElementById('wl-stock').value    = w.stock;
+  document.getElementById('wl-priority').value = w.priority;
+  document.getElementById('wl-status').value   = w.status;
+  document.getElementById('wl-price-low').value = w.priceLow;
+  document.getElementById('wl-price-high').value= w.priceHigh;
+  document.getElementById('wl-stoploss').value  = w.stoploss;
+  document.getElementById('wl-ath').value       = w.ath;
+  document.getElementById('wl-volume').value    = w.volume;
+  document.getElementById('wl-entry').value     = w.entry;
+  document.getElementById('wl-reason').value    = w.reason;
+  // 一旦削除してフォーム送信で新規追加
+  watchItems = watchItems.filter(function(x){ return x.id !== id; });
+  saveWatchItems();
+  renderWatchList();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ────────────────────────────────────────────
+// テーマカラー
+// ────────────────────────────────────────────
+var themes = {
+  pink: {
+    '--bg':'#fdf0f4','--bg2':'#fce8ee','--pink1':'#e8a0b4','--pink2':'#f2bfcc',
+    '--pink3':'#f9dce4','--pink4':'#fdeef2','--pink5':'#fff5f8','--rose':'#d4607a',
+    '--lilac':'#e8d4f0','--text':'#4a3540','--text2':'#7a5a68','--text3':'#b08898',
+    '--border':'#f0c8d4','--shadow':'rgba(200,120,150,0.12)',
+    '--header1':'#f9dce4','--header2':'#fce8ee','--header3':'#e8d4f0',
+    '--tab-active1':'#f2bfcc','--tab-active2':'#e8a0b4',
+    '--btn-grad1':'#e8a0b4','--btn-grad2':'#d4607a',
+    '--input-bg':'#fff5f8','--input-border':'#f9dce4','--input-focus':'#e8a0b4'
+  },
+  green: {
+    '--bg':'#f0f8f2','--bg2':'#e4f4ea','--pink1':'#6aba80','--pink2':'#90cca0',
+    '--pink3':'#c0e8ca','--pink4':'#e4f4ea','--pink5':'#f0f8f2','--rose':'#3a8a54',
+    '--lilac':'#d4f0d8','--text':'#2a4032','--text2':'#4a7058','--text3':'#80a888',
+    '--border':'#b0d8bc','--shadow':'rgba(80,160,100,0.12)',
+    '--header1':'#c8e8d0','--header2':'#d8f0de','--header3':'#b8e0c4',
+    '--tab-active1':'#90cca0','--tab-active2':'#6aba80',
+    '--btn-grad1':'#6aba80','--btn-grad2':'#3a8a54',
+    '--input-bg':'#f0f8f2','--input-border':'#c0e8ca','--input-focus':'#6aba80'
+  },
+  blue: {
+    '--bg':'#f0f4fc','--bg2':'#e4ecf8','--pink1':'#6090d0','--pink2':'#88aee0',
+    '--pink3':'#c0d4f0','--pink4':'#e4ecf8','--pink5':'#f0f4fc','--rose':'#3060a8',
+    '--lilac':'#d0ddf4','--text':'#2a3448','--text2':'#4a5878','--text3':'#8090a8',
+    '--border':'#b0c4e4','--shadow':'rgba(80,110,190,0.12)',
+    '--header1':'#c8d8f0','--header2':'#d8e4f8','--header3':'#b8ccea',
+    '--tab-active1':'#88aee0','--tab-active2':'#6090d0',
+    '--btn-grad1':'#6090d0','--btn-grad2':'#3060a8',
+    '--input-bg':'#f0f4fc','--input-border':'#c0d4f0','--input-focus':'#6090d0'
+  },
+  yellow: {
+    '--bg':'#fdf8ec','--bg2':'#faf0d8','--pink1':'#d0a030','--pink2':'#e0bc60',
+    '--pink3':'#f0d890','--pink4':'#faf0d8','--pink5':'#fdf8ec','--rose':'#a07010',
+    '--lilac':'#f0e8b0','--text':'#483818','--text2':'#785828','--text3':'#a89060',
+    '--border':'#e8cc80','--shadow':'rgba(180,140,40,0.12)',
+    '--header1':'#f0d890','--header2':'#faf0d8','--header3':'#e8cc80',
+    '--tab-active1':'#e0bc60','--tab-active2':'#d0a030',
+    '--btn-grad1':'#e0bc60','--btn-grad2':'#a07010',
+    '--input-bg':'#fdf8ec','--input-border':'#f0d890','--input-focus':'#d0a030'
+  },
+  gray: {
+    '--bg':'#f4f4f6','--bg2':'#ebebee','--pink1':'#8090a0','--pink2':'#a0aab4',
+    '--pink3':'#ccd0d8','--pink4':'#e8eaee','--pink5':'#f4f4f6','--rose':'#4a5a6a',
+    '--lilac':'#d4d8e0','--text':'#2a3038','--text2':'#4a5568','--text3':'#8090a0',
+    '--border':'#c0c8d0','--shadow':'rgba(80,100,120,0.12)',
+    '--header1':'#dde0e6','--header2':'#e8eaee','--header3':'#ccd0d8',
+    '--tab-active1':'#a0aab4','--tab-active2':'#8090a0',
+    '--btn-grad1':'#8090a0','--btn-grad2':'#4a5a6a',
+    '--input-bg':'#f4f4f6','--input-border':'#ccd0d8','--input-focus':'#8090a0'
+  },
+  purple: {
+    '--bg':'#f6f0fc','--bg2':'#ede4f8','--pink1':'#9060c8','--pink2':'#b088d8',
+    '--pink3':'#d4b8f0','--pink4':'#ede4f8','--pink5':'#f6f0fc','--rose':'#6030a0',
+    '--lilac':'#e0cef8','--text':'#38224a','--text2':'#5a4070','--text3':'#9070b0',
+    '--border':'#c8a8e8','--shadow':'rgba(130,80,200,0.12)',
+    '--header1':'#d8c0f0','--header2':'#ede4f8','--header3':'#c8a8e8',
+    '--tab-active1':'#b088d8','--tab-active2':'#9060c8',
+    '--btn-grad1':'#9060c8','--btn-grad2':'#6030a0',
+    '--input-bg':'#f6f0fc','--input-border':'#d4b8f0','--input-focus':'#9060c8'
+  }
+};
+
+function applyTheme(name) {
+  var t = themes[name];
+  if (!t) return;
+  var root = document.documentElement;
+  Object.keys(t).forEach(function(k){ root.style.setProperty(k, t[k]); });
+
+  // ヘッダーグラデーションを動的に更新
+  var hdr = document.querySelector('header');
+  if (hdr) hdr.style.background = 'linear-gradient(135deg,' + t['--header1'] + ' 0%,' + t['--header2'] + ' 50%,' + t['--header3'] + ' 100%)';
+
+  // active tab gradient
+  var styleEl = document.getElementById('theme-dynamic-style');
+  if (!styleEl) { styleEl = document.createElement('style'); styleEl.id='theme-dynamic-style'; document.head.appendChild(styleEl); }
+  styleEl.textContent = [
+    '.tab.active{background:linear-gradient(135deg,' + t['--tab-active1'] + ',' + t['--tab-active2'] + ') !important}',
+    '.btn-add{background:linear-gradient(135deg,' + t['--btn-grad1'] + ',' + t['--btn-grad2'] + ') !important}',
+    '.btn-memo-save{background:linear-gradient(135deg,' + t['--btn-grad1'] + ',' + t['--btn-grad2'] + ') !important}',
+    '.btn-save-edit{background:linear-gradient(135deg,' + t['--btn-grad1'] + ',' + t['--btn-grad2'] + ') !important}',
+    'input,select{background:' + t['--input-bg'] + ' !important;border-color:' + t['--input-border'] + ' !important}',
+    'input:focus,select:focus{border-color:' + t['--input-focus'] + ' !important}',
+    '.card-title{color:' + t['--rose'] + ' !important}',
+    '.modal-title{color:' + t['--rose'] + ' !important}',
+    'header h1{color:' + t['--rose'] + ' !important}',
+    '.dream-amount{color:#a060c8}',
+  ].join('\n');
+
+  // ボタン状態更新
+  document.querySelectorAll('.theme-btn').forEach(function(btn){
+    btn.classList.toggle('active', btn.dataset.theme === name);
+  });
+
+  localStorage.setItem('theme_v1', name);
+}
+
+function loadTheme() {
+  var saved = localStorage.getItem('theme_v1') || 'pink';
+  applyTheme(saved);
 }
 
 load();
+loadWatchItems();
+loadTheme();
 document.getElementById('date').value = new Date().toISOString().slice(0,10);
 renderAll();
 </script>
-  <!-- 持ち越しモーダル -->
+  
+<!-- 増資履歴モーダル -->
+<div class="modal-overlay" id="invest-modal" onclick="closeInvestModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <div class="modal-title">💸 増資履歴</div>
+      <button class="btn-modal-close" onclick="closeInvestModal()">閉じる</button>
+    </div>
+    <div class="invest-total">
+      <div><div class="invest-total-label">初期元手</div><div style="font-size:14px;font-weight:800;color:var(--text2)" id="modal-seed">¥ —</div></div>
+      <div style="color:var(--text3);font-size:18px;font-weight:700">＋</div>
+      <div><div class="invest-total-label">増資合計</div><div style="font-size:14px;font-weight:800;color:var(--rose)" id="modal-invest-total">¥ 0</div></div>
+      <div style="color:var(--text3);font-size:18px;font-weight:700">＝</div>
+      <div style="text-align:right"><div class="invest-total-label">現在の元手</div><div style="font-size:15px;font-weight:800;color:var(--rose)" id="modal-base-total">¥ —</div></div>
+    </div>
+    <div class="invest-add-form">
+      <div class="invest-add-title">＋ 増資を追加する</div>
+      <div class="form-grid">
+        <div class="form-group"><label>📅 日付</label><input type="date" id="invest-date"></div>
+        <div class="form-group"><label>💴 金額（円）</label><input type="number" id="invest-amount" placeholder="100000"></div>
+        <div class="form-group full"><label>📝 メモ（任意）</label><input type="text" id="invest-memo" placeholder="例：5月ボーナス追加"></div>
+      </div>
+      <button class="btn-add" style="margin-top:10px" onclick="addInvestment()">追加する</button>
+    </div>
+    <div id="invest-list"></div>
+  </div>
+</div>
+
+<!-- 持ち越しモーダル -->
   <div class="modal-overlay" id="carry-modal" onclick="closeCarryModal(event)">
     <div class="modal-sheet">
       <div class="modal-header">
