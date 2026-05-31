@@ -106,17 +106,20 @@
 
   .tab {
     flex: 1;
-    padding: 10px 6px;
+    padding: 8px 2px;
     border: none;
     background: transparent;
     color: var(--text3);
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
     cursor: pointer;
     border-radius: 12px;
     transition: all 0.22s cubic-bezier(.4,0,.2,1);
-    letter-spacing: 0.03em;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.3;
   }
 
   .tab:hover { background: var(--pink4); color: var(--text2); }
@@ -2382,7 +2385,10 @@ function renderWatchList() {
     html += '<div class="wl-card' + statusClass + '" draggable="true" data-idx="' + idx + '" '
       + 'ondragstart="wlDragStart(event,' + idx + ')" ondragover="wlDragOver(event)" '
       + 'ondrop="wlDrop(event,' + idx + ')" ondragleave="wlDragLeave(event)" ondragend="wlDragEnd(event)">';
-    html += '<div class="wl-card-header">';
+    html += '<div class="wl-card-header" '
+      + 'ontouchstart="wlTouchStart(event,' + idx + ')" '
+      + 'ontouchmove="wlTouchMove(event)" '
+      + 'ontouchend="wlTouchEnd(event)">';
     html += '<span class="wl-drag-handle">☰</span>';
     html += '<span class="wl-stock-name">' + w.stock + '</span>';
     html += '<div class="wl-badges">' + pBadge + sBadge + '</div>';
@@ -2399,7 +2405,10 @@ function renderWatchList() {
   list.innerHTML = html;
 }
 
-// ドラッグ＆ドロップ並び替え
+// ドラッグ＆ドロップ並び替え（PC + スマホ タッチ両対応）
+var wlTouchClone = null;
+var wlTouchSrcIdx = null;
+
 function wlDragStart(e, idx) {
   wlDragSrcIdx = idx;
   e.currentTarget.classList.add('wl-dragging');
@@ -2424,6 +2433,53 @@ function wlDrop(e, toIdx) {
   wlDragSrcIdx = null;
   saveWatchItems();
   renderWatchList();
+}
+
+// ── タッチ操作（スマホ用） ──
+function wlTouchStart(e, idx) {
+  wlTouchSrcIdx = idx;
+  var card = e.currentTarget.closest('.wl-card');
+  card.classList.add('wl-dragging');
+  var rect = card.getBoundingClientRect();
+  wlTouchClone = card.cloneNode(true);
+  wlTouchClone.style.cssText = 'position:fixed;z-index:9999;left:' + rect.left + 'px;top:' + rect.top + 'px;width:' + rect.width + 'px;opacity:0.78;pointer-events:none;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,0.18);transform:scale(1.03);transition:none';
+  document.body.appendChild(wlTouchClone);
+  e.preventDefault();
+}
+function wlTouchMove(e) {
+  if (!wlTouchClone) return;
+  e.preventDefault();
+  var touch = e.touches[0];
+  wlTouchClone.style.left = (touch.clientX - wlTouchClone.offsetWidth / 2) + 'px';
+  wlTouchClone.style.top  = (touch.clientY - 50) + 'px';
+  document.querySelectorAll('.wl-card').forEach(function(c){ c.classList.remove('wl-drag-over'); });
+  var els = document.elementsFromPoint(touch.clientX, touch.clientY);
+  var target = null;
+  for (var i = 0; i < els.length; i++) {
+    if (els[i].classList && els[i].classList.contains('wl-card') && !els[i].style.pointerEvents) { target = els[i]; break; }
+  }
+  if (target) target.classList.add('wl-drag-over');
+}
+function wlTouchEnd(e) {
+  if (wlTouchClone) { wlTouchClone.remove(); wlTouchClone = null; }
+  document.querySelectorAll('.wl-card').forEach(function(c){ c.classList.remove('wl-dragging','wl-drag-over'); });
+  if (wlTouchSrcIdx === null) return;
+  var touch = e.changedTouches[0];
+  var els = document.elementsFromPoint(touch.clientX, touch.clientY);
+  var target = null;
+  for (var i = 0; i < els.length; i++) {
+    if (els[i].classList && els[i].classList.contains('wl-card')) { target = els[i]; break; }
+  }
+  if (target) {
+    var toIdx = parseInt(target.dataset.idx);
+    if (!isNaN(toIdx) && toIdx !== wlTouchSrcIdx) {
+      var moved = watchItems.splice(wlTouchSrcIdx, 1)[0];
+      watchItems.splice(toIdx, 0, moved);
+      saveWatchItems();
+      renderWatchList();
+    }
+  }
+  wlTouchSrcIdx = null;
 }
 
 // 編集モーダル（簡易インライン）
