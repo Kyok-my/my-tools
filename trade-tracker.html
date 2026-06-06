@@ -1310,10 +1310,6 @@
         <div class="summary-label">🔄 持ち越し中</div>
         <div class="summary-value" id="s-carry">— 件</div>
       </div>
-      <div class="summary-item">
-        <div class="summary-label">💹 今月勝率</div>
-        <div class="summary-value" id="s-winrate">— %</div>
-      </div>
     </div>
 
     <div class="card">
@@ -1501,7 +1497,7 @@
           <label>📌 ステータス</label>
           <select id="wl-status">
             <option value="watch">👀 ウォッチ中</option>
-            <option value="ready">✅ 準備OK</option>
+            <option value="ready">🚀 GoGo！</option>
             <option value="pass">⏭ 見送り</option>
           </select>
         </div>
@@ -1522,7 +1518,7 @@
           <input type="number" id="wl-price-high" placeholder="例：2000">
         </div>
 
-        <!-- 行4: 損切りライン・上場来高値 -->
+        <!-- 行4: 損切りライン（右は空欄） -->
         <div class="form-group">
           <label>🛑 損切りライン<span class="wl-opt">任意</span></label>
           <div class="wl-stoploss-wrap">
@@ -1531,12 +1527,19 @@
             <span class="wl-stoploss-suffix">円まで</span>
           </div>
         </div>
+        <div class="form-group"></div>
+
+        <!-- 行5: 年初来高値・上場来高値 -->
+        <div class="form-group">
+          <label>📅 年初来高値（円）<span class="wl-opt">任意</span></label>
+          <input type="number" id="wl-yth" placeholder="例：2800">
+        </div>
         <div class="form-group">
           <label>🏆 上場来高値（円）<span class="wl-opt">任意</span></label>
           <input type="number" id="wl-ath" placeholder="例：3500">
         </div>
 
-        <!-- 行5: 出来高・エントリー条件 -->
+        <!-- 行6: 出来高・エントリー条件 -->
         <div class="form-group">
           <label>📊 出来高目安<span class="wl-opt">任意</span></label>
           <input type="text" id="wl-volume" placeholder="例：100万株以上">
@@ -1546,7 +1549,7 @@
           <input type="text" id="wl-entry" placeholder="例：前日高値抜けで買い">
         </div>
 
-        <!-- 行6: 注目理由・イベント -->
+        <!-- 行7: 注目理由・イベント -->
         <div class="form-group wl-full">
           <label>📝 注目理由・イベント<span class="wl-opt">任意</span></label>
           <input type="text" id="wl-reason" placeholder="例：決算良好。配当5/20。上方修正期待。">
@@ -2312,7 +2315,7 @@ function addWatchItem() {
   if (!stock) { alert('銘柄名は必須です'); return; }
 
   var nid = watchItems.length > 0 ? Math.max.apply(null, watchItems.map(function(w){ return w.id; })) + 1 : 1;
-  watchItems.unshift({
+  var newItem = {
     id: nid,
     stock:    stock,
     priority: document.getElementById('wl-priority').value,
@@ -2321,13 +2324,20 @@ function addWatchItem() {
     priceHigh:document.getElementById('wl-price-high').value.trim(),
     stoploss: document.getElementById('wl-stoploss').value.trim(),
     ath:      document.getElementById('wl-ath').value.trim(),
+    yth:      document.getElementById('wl-yth').value.trim(),
     volume:   document.getElementById('wl-volume').value.trim(),
     entry:    document.getElementById('wl-entry').value.trim(),
     reason:   document.getElementById('wl-reason').value.trim()
-  });
+  };
+  // 見送りは末尾、それ以外は先頭に追加
+  if (newItem.status === 'pass') {
+    watchItems.push(newItem);
+  } else {
+    watchItems.unshift(newItem);
+  }
   saveWatchItems();
 
-  ['wl-stock','wl-price-low','wl-price-high','wl-stoploss','wl-ath','wl-volume','wl-entry','wl-reason'].forEach(function(id){
+  ['wl-stock','wl-price-low','wl-price-high','wl-stoploss','wl-ath','wl-yth','wl-volume','wl-entry','wl-reason'].forEach(function(id){
     document.getElementById(id).value = '';
   });
   document.getElementById('wl-priority').value = 'today';
@@ -2353,7 +2363,7 @@ function renderWatchList() {
   empty.style.display = 'none';
 
   var priorityLabel = { today:'今日狙う', later:'来週以降' };
-  var statusLabel   = { watch:'ウォッチ中', ready:'準備OK', pass:'見送り' };
+  var statusLabel   = { watch:'ウォッチ中', ready:'GoGo！', pass:'見送り' };
   var priorityBadge = { today:'wl-badge-today', later:'wl-badge-later' };
   var statusBadge   = { watch:'wl-badge-watch', ready:'wl-badge-ready', pass:'wl-badge-pass' };
 
@@ -2372,6 +2382,8 @@ function renderWatchList() {
       ? '<div class="wl-info-row"><span class="wl-info-label">🛑 損切りライン</span><span class="wl-info-val wl-stoploss-val">▲' + Number(w.stoploss).toLocaleString() + '円まで</span></div>' : '';
     var athHtml = w.ath
       ? '<div class="wl-info-row"><span class="wl-info-label">🏆 上場来高値</span><span class="wl-info-val wl-ath-val">¥' + Number(w.ath).toLocaleString() + '</span></div>' : '';
+    var ythHtml = w.yth
+      ? '<div class="wl-info-row"><span class="wl-info-label">📅 年初来高値</span><span class="wl-info-val wl-ath-val">¥' + Number(w.yth).toLocaleString() + '</span></div>' : '';
     var volHtml = w.volume
       ? '<div class="wl-info-row"><span class="wl-info-label">📈 出来高目安</span><span class="wl-info-val">' + w.volume + '</span></div>' : '';
     var entryHtml = w.entry
@@ -2379,7 +2391,7 @@ function renderWatchList() {
     var reasonHtml = w.reason
       ? '<div class="wl-info-row full-row"><span class="wl-info-label">📝 注目理由</span><span class="wl-info-val">' + w.reason + '</span></div>' : '';
 
-    var bodyRows = rangeHtml + slHtml + athHtml + volHtml + entryHtml + reasonHtml;
+    var bodyRows = rangeHtml + slHtml + athHtml + ythHtml + volHtml + entryHtml + reasonHtml;
     var statusClass = w.status === 'pass' ? ' status-pass' : '';
 
     html += '<div class="wl-card' + statusClass + '" draggable="true" data-idx="' + idx + '" '
@@ -2494,6 +2506,7 @@ function openWlEdit(id) {
   document.getElementById('wl-price-high').value= w.priceHigh;
   document.getElementById('wl-stoploss').value  = w.stoploss;
   document.getElementById('wl-ath').value       = w.ath;
+  document.getElementById('wl-yth').value       = w.yth || '';
   document.getElementById('wl-volume').value    = w.volume;
   document.getElementById('wl-entry').value     = w.entry;
   document.getElementById('wl-reason').value    = w.reason;
